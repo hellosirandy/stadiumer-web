@@ -1,36 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import compose from 'compose';
+import { withRouter } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';
-import { GOOGLE_MAP_API_KEY } from '../../secrets';
 import styles from './styles';
+import { setStadium } from '../../store/actions/stadium';
 
 class StadiumCard extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      location: '',
-    };
-    const { location } = props.stadium;
-    fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?result_type=locality&latlng=${location.lat},${location.lon}&key=${GOOGLE_MAP_API_KEY}`,
-    ).then((result) => result.json()).then((result) => {
-      this.setState({ location: result.results[0].formatted_address.trim().replace(/-/g, '') });
-    });
+  handleCardClicked = () => {
+    const { stadium, history, onSetStadium } = this.props;
+    onSetStadium(stadium);
+    history.push(`/stadium/${stadium.id}`);
   }
 
   render() {
     const { stadium } = this.props;
-    const { location } = this.state;
     return (
-      <Card style={styles.card}>
+      <Card style={styles.card} onClick={this.handleCardClicked}>
         <div style={{
           ...styles.cover,
-          backgroundImage: `url(${stadium.cover})`,
+          backgroundImage: `url("${stadium.cover}")`,
         }}
         />
         <Card.Body style={styles.body}>
           <Card.Title style={{ fontSize: '1rem' }}>{stadium.name}</Card.Title>
-          <Card.Subtitle style={styles.subtitle}>{location}</Card.Subtitle>
+          <Card.Subtitle style={styles.subtitle}>{stadium.locality}</Card.Subtitle>
           <Card.Text style={styles.content}>
             {stadium.capacity.toLocaleString()}
             &nbsp;•&nbsp;
@@ -44,6 +39,15 @@ class StadiumCard extends React.PureComponent {
 
 StadiumCard.propTypes = {
   stadium: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
+  onSetStadium: PropTypes.func.isRequired,
 };
 
-export default StadiumCard;
+const mapDispatchToProps = (dispatch) => ({
+  onSetStadium: (stadium) => dispatch(setStadium(stadium)),
+});
+
+export default compose(
+  withRouter,
+  connect(null, mapDispatchToProps),
+)(StadiumCard);

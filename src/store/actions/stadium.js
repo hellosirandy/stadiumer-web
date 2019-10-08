@@ -1,6 +1,6 @@
 import { uiStartLoading } from './ui';
 import { STADIUM_GETTING } from '../loadingTypes';
-import { STADIUM_GET_ALL } from '../actionTypes';
+import { STADIUM_GET_ALL, STADIUM_SET_SINGLE } from '../actionTypes';
 import { getStadiumsAPI } from '../../apis/stadium';
 
 export const getStadiums = () => async (dispatch) => {
@@ -9,5 +9,12 @@ export const getStadiums = () => async (dispatch) => {
   dispatch({
     type: STADIUM_GET_ALL,
     stadiums,
+  });
+};
+
+export const setStadium = (stadium) => (dispatch) => {
+  dispatch({
+    type: STADIUM_SET_SINGLE,
+    stadium,
   });
 };

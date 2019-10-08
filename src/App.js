@@ -1,47 +1,23 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import {
+  HashRouter as Router, Route, Switch,
+} from 'react-router-dom';
+import HomePage from './components/HomePage';
 import NavBar from './components/NavBar';
-import StadiumCard from './components/StadiumCard';
-import { getStadiums } from './store/actions/stadium';
+import StadiumPage from './components/StadiumPage';
 
 class App extends React.PureComponent {
-  componentDidMount() {
-    const { onGetStadium } = this.props;
-    onGetStadium();
-  }
-
   render() {
-    const { stadiums } = this.props;
     return (
-      <>
+      <Router>
         <NavBar />
-        <Row>
-          {stadiums.map((stadium) => (
-            <Col xs={2} key={stadium.id}>
-              <StadiumCard stadium={stadium} />
-            </Col>
-          ))}
-        </Row>
-
-      </>
+        <Switch>
+          <Route path="/" exact component={HomePage} />
+          <Route path="/stadium/:stadiumId" component={StadiumPage} />
+        </Switch>
+      </Router>
     );
   }
 }
 
-App.propTypes = {
-  stadiums: PropTypes.array.isRequired,
-  onGetStadium: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  stadiums: state.stadium.stadiums,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onGetStadium: () => dispatch(getStadiums()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;

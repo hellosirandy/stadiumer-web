@@ -1,16 +1,18 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Navbar from 'react-bootstrap/Navbar';
-// import { getStadiums } from '../../apis/stadium';
+import { withRouter } from 'react-router-dom';
 
 class NavBar extends React.PureComponent {
-  componentDidMount() {
-
+  handleBrandClicked = () => {
+    const { history } = this.props;
+    history.push('/');
   }
 
   render() {
     return (
       <Navbar bg="dark" variant="dark">
-        <Navbar.Brand>
+        <Navbar.Brand style={{ cursor: 'pointer' }} onClick={this.handleBrandClicked}>
           Stadiumer
         </Navbar.Brand>
       </Navbar>
@@ -18,4 +20,8 @@ class NavBar extends React.PureComponent {
   }
 }
 
-export default NavBar;
+NavBar.propTypes = {
+  history: PropTypes.object.isRequired,
+};
+
+export default withRouter(NavBar);
