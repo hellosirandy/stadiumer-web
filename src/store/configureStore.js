@@ -4,9 +4,11 @@ import {
 import thunk from 'redux-thunk';
 
 import ui from './reducers/ui';
+import stadium from './reducers/stadium';
 
 const rootReducer = combineReducers({
   ui,
+  stadium,
 });
 
 let composeEnhancers = compose;

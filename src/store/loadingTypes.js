@@ -1,0 +1,1 @@
+export const STADIUM_GETTING = 'STADIUM_GETTING';

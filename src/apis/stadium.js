@@ -3,7 +3,7 @@ import API from '@hellosirandy/rest-api-wrapper';
 const baseURL = 'http://localhost:3001';
 const api = new API(baseURL);
 
-export const getStadiums = () => {
+export const getStadiumsAPI = () => {
   const options = {
     endpoint: '/stadium',
   };
