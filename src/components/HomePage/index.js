@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import StadiumList from '../StadiumList';
 
 class HomePage extends React.PureComponent {
@@ -11,4 +12,4 @@ class HomePage extends React.PureComponent {
   }
 }
 
-export default HomePage;
+export default withRouter(HomePage);

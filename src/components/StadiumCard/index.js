@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import compose from 'compose';
+import { compose } from 'recompose';
 import { withRouter } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';
 import styles from './styles';
