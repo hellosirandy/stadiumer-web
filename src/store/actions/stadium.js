@@ -3,11 +3,14 @@ import { STADIUM_GETTING } from '../loadingTypes';
 import { STADIUM_SET_ALL, STADIUM_SET_SINGLE } from '../actionTypes';
 import { getStadiumsAPI } from '../../apis/stadium';
 
-export const getStadiums = () => async (dispatch) => {
+export const getStadiums = (options) => async (dispatch) => {
   dispatch(uiStartLoading(STADIUM_GETTING));
-  const stadiums = await getStadiumsAPI();
+  const limit = options.limit || 6;
+  const stadiums = await getStadiumsAPI({ [options.type]: options.value, limit });
+  const groupName = options.value || 'Recommended';
   dispatch({
     type: STADIUM_SET_ALL,
+    groupName,
     stadiums,
   });
   dispatch(uiStopLoading(STADIUM_GETTING));

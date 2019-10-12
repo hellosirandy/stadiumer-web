@@ -12,7 +12,7 @@ const StadiumRecommendation = ({ stadium, onClick }) => (
     <Col xs={6} style={{ padding: 0 }}>
       <h1 style={styles.title}>{stadium.name}</h1>
       <h2 style={styles.subtitle}>
-        {stadium.leagues.map((league) => <span key={league}>{league}</span>)}
+        <span>{stadium.leagues.join(', ')}</span>
       </h2>
       <h2 style={styles.subtitle}>{stadium.locality}</h2>
       <h2 style={styles.subtitle}>

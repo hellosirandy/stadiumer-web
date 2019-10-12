@@ -1,7 +1,7 @@
 import { STADIUM_SET_ALL, STADIUM_SET_SINGLE } from '../actionTypes';
 
 const initialState = {
-  stadiums: [],
+  stadiums: {},
   stadium: {},
 };
 
@@ -10,7 +10,10 @@ const reducer = (state = initialState, action) => {
     case STADIUM_SET_ALL:
       return {
         ...state,
-        stadiums: action.stadiums,
+        stadiums: {
+          ...state.stadiums,
+          [action.groupName]: action.stadiums,
+        },
       };
     case STADIUM_SET_SINGLE:
       return {

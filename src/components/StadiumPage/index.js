@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Rating from 'react-rating';
 import Container from 'react-bootstrap/Container';
+import Card from 'react-bootstrap/Card';
+import ListGroup from 'react-bootstrap/ListGroup';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
@@ -12,6 +14,8 @@ import ImageCarousel from '../ImageCarousel';
 import Map from '../Map';
 import StadiumIntroSection from '../StadiumIntroSection';
 import StadiumRecommendation from '../StadiumRecommendation';
+import styles from './styles';
+import StadiumKnownFor from '../StadiumKnownFor';
 
 class StadiumPage extends React.PureComponent {
   constructor(props) {
@@ -53,16 +57,57 @@ class StadiumPage extends React.PureComponent {
                 <Button variant="outline-dark" size="sm" style={{ marginLeft: 8 }}>Share</Button>
                 <Button variant="outline-dark" size="sm" style={{ marginLeft: 8 }}>Save</Button>
               </ButtonToolbar>
+              <StadiumIntroSection title="Known For">
+                <StadiumKnownFor stadium={stadium} />
+              </StadiumIntroSection>
               <StadiumIntroSection title="Location">
                 <Map location={stadium.location} />
               </StadiumIntroSection>
 
             </Col>
             <Col xs={4}>
+              <Card>
+                <ListGroup variant="flush">
+                  <ListGroup.Item style={{ display: 'flex' }}>
+                    <Row style={{ width: '100%' }}>
+                      <Col xs={1}>
+                        <i className="fa fa-external-link" style={{ fontSize: '1.4rem' }} />
+                      </Col>
+                      <Col style={styles.ellipsis}>
+                        <a href={stadium.website} target="_blank" rel="noopener noreferrer">{stadium.website}</a>
+                      </Col>
+                    </Row>
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <Row>
+                      <Col xs={1}>
+                        <i className="fa fa-phone" style={{ fontSize: '1.4rem', marginRight: 4 }} />
+                      </Col>
+                      <Col>
+                        <span>{stadium.phone}</span>
+                      </Col>
+                    </Row>
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <Row>
+                      <Col xs={1}>
+                        <i className="fa fa-map-marker" style={{ fontSize: '1.4rem', marginRight: 4 }} />
+                      </Col>
+                      <Col>
+                        {stadium.address}
+                      </Col>
+                    </Row>
+                  </ListGroup.Item>
+                </ListGroup>
+              </Card>
               <StadiumIntroSection title="You might also like">
                 <>
                   {(stadium.recommendations || []).map((recStadium) => (
-                    <StadiumRecommendation key={recStadium.id} stadium={recStadium} onClick={this.handleRecommendationClicked(recStadium.id)} />
+                    <StadiumRecommendation
+                      key={recStadium.id}
+                      stadium={recStadium}
+                      onClick={this.handleRecommendationClicked(recStadium.id)}
+                    />
                   ))}
                 </>
               </StadiumIntroSection>

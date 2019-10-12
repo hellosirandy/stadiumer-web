@@ -1,13 +1,19 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import StadiumList from '../StadiumList';
+import SideBar from '../SideBar';
 
 class HomePage extends React.PureComponent {
   render() {
     return (
-      <div style={{ padding: '0 2rem' }}>
-        <StadiumList />
-      </div>
+      <>
+        <SideBar />
+        <div style={{ padding: '0 2rem', marginLeft: 240, paddingTop: 56 }}>
+          <StadiumList />
+          <StadiumList type="league" value="MLB" />
+          <StadiumList type="league" value="NFL" />
+        </div>
+      </>
     );
   }
 }
