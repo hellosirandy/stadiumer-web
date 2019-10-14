@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import compose from 'recompose/compose';
+import { withRouter } from 'react-router-dom';
 import Rating from 'react-rating';
 import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
@@ -40,7 +42,7 @@ class StadiumPage extends React.PureComponent {
   render() {
     const { stadium } = this.props;
     return stadium.id ? (
-      <>
+      <div style={{ paddingTop: 56 }}>
         <ImageCarousel images={[stadium.cover]} />
         <Container style={{ marginTop: 16, padding: 0 }}>
           <Row>
@@ -114,7 +116,7 @@ class StadiumPage extends React.PureComponent {
             </Col>
           </Row>
         </Container>
-      </>
+      </div>
     ) : (
       <div />
     );
@@ -136,4 +138,7 @@ const mapDispatchToProps = (dispatch) => ({
   onGetStadium: (id) => dispatch(getStadium(id)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(StadiumPage);
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+)(StadiumPage);

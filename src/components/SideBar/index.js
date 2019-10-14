@@ -2,24 +2,52 @@ import React from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
 import styles from './styles';
 
+const sports = [
+  'Football',
+  'Baseball',
+  'Soccer',
+  'Hockey',
+  'Basketball',
+];
+
+const leagues = [
+  'NFL',
+  'MLB',
+  'NHL',
+  'Premier League',
+  'NBA',
+  'NCAA',
+  'La Liga',
+];
+
 const SideBar = () => (
   <div style={styles.container}>
     <ListGroup>
       <ListGroup.Item action style={styles.listItem}>Home</ListGroup.Item>
       <ListGroup.Item as="div" style={styles.divider}><hr style={{ marginTop: '0.5rem', marginBottom: '0.5rem' }} /></ListGroup.Item>
       <ListGroup.Item as="h6" style={styles.listItem}>Sports</ListGroup.Item>
-      <ListGroup.Item action style={styles.listItem}>Football</ListGroup.Item>
-      <ListGroup.Item action style={styles.listItem}>Baseball</ListGroup.Item>
-      <ListGroup.Item action style={styles.listItem}>Soccer</ListGroup.Item>
-      <ListGroup.Item action style={styles.listItem}>Hockey</ListGroup.Item>
-      <ListGroup.Item action style={styles.listItem}>Basketball</ListGroup.Item>
+      {sports.map((sport) => (
+        <ListGroup.Item
+          key={sport}
+          action
+          style={styles.listItem}
+          href={`/#/category?type=sport&value=${encodeURIComponent(sport.toLowerCase())}`}
+        >
+          {sport}
+        </ListGroup.Item>
+      ))}
       <ListGroup.Item as="div" style={styles.divider}><hr style={{ marginTop: '0.5rem', marginBottom: '0.5rem' }} /></ListGroup.Item>
       <ListGroup.Item as="h6" style={styles.listItem}>Leagues</ListGroup.Item>
-      <ListGroup.Item action style={styles.listItem}>NFL</ListGroup.Item>
-      <ListGroup.Item action style={styles.listItem}>MLB</ListGroup.Item>
-      <ListGroup.Item action style={styles.listItem}>NHL</ListGroup.Item>
-      <ListGroup.Item action style={styles.listItem}>Premier League</ListGroup.Item>
-      <ListGroup.Item action style={styles.listItem}>NBA</ListGroup.Item>
+      {leagues.map((league) => (
+        <ListGroup.Item
+          key={league}
+          action
+          style={styles.listItem}
+          href={`/#/category?type=league&value=${encodeURIComponent(league)}`}
+        >
+          {league}
+        </ListGroup.Item>
+      ))}
     </ListGroup>
   </div>
 );

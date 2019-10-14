@@ -3,3 +3,5 @@ export const UI_STOP_LOADING = 'UI_STOP_LOADING';
 
 export const STADIUM_SET_ALL = 'STADIUM_SET_ALL';
 export const STADIUM_SET_SINGLE = 'STADIUM_SET_SINGLE';
+
+export const AUTH_SET_TOKEN = 'AUTH_SET_TOKEN';

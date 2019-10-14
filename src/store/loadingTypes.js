@@ -1,1 +1,3 @@
 export const STADIUM_GETTING = 'STADIUM_GETTING';
+
+export const AUTH_SIGNIN = 'AUTH_SIGNIN';

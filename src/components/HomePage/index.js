@@ -8,7 +8,7 @@ class HomePage extends React.PureComponent {
     return (
       <>
         <SideBar />
-        <div style={{ padding: '0 2rem', marginLeft: 240, paddingTop: 56 }}>
+        <div style={{ padding: '0 2rem', marginLeft: 200, paddingTop: 56 }}>
           <StadiumList />
           <StadiumList type="league" value="MLB" />
           <StadiumList type="league" value="NFL" />

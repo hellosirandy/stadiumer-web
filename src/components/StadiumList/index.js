@@ -8,8 +8,10 @@ import StadiumCard from '../StadiumCard';
 
 class StadiumList extends React.PureComponent {
   componentDidMount() {
-    const { onGetStadium, type, value } = this.props;
-    onGetStadium({ type, value });
+    const {
+      onGetStadium, type, value, limit,
+    } = this.props;
+    onGetStadium({ type, value, limit });
   }
 
   render() {
@@ -35,6 +37,7 @@ class StadiumList extends React.PureComponent {
 StadiumList.defaultProps = {
   type: '',
   value: '',
+  limit: 6,
   stadiums: [],
 };
 
@@ -43,6 +46,7 @@ StadiumList.propTypes = {
   onGetStadium: PropTypes.func.isRequired,
   type: PropTypes.string,
   value: PropTypes.string,
+  limit: PropTypes.number,
 };
 
 const mapStateToProps = (state, props) => ({

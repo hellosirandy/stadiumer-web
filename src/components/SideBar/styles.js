@@ -6,11 +6,10 @@ const listItem = {
 
 export default {
   container: {
-    width: 240,
+    width: 200,
     paddingTop: 60,
     height: '100%',
     position: 'fixed',
-    // backgroundColor: '#f8f9fa',
   },
   listItem,
   divider: {

@@ -5,8 +5,7 @@ import { getStadiumsAPI } from '../../apis/stadium';
 
 export const getStadiums = (options) => async (dispatch) => {
   dispatch(uiStartLoading(STADIUM_GETTING));
-  const limit = options.limit || 6;
-  const stadiums = await getStadiumsAPI({ [options.type]: options.value, limit });
+  const stadiums = await getStadiumsAPI({ [options.type]: options.value, limit: options.limit });
   const groupName = options.value || 'Recommended';
   dispatch({
     type: STADIUM_SET_ALL,

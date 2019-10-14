@@ -3,23 +3,17 @@ import PropTypes from 'prop-types';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-
+import Button from 'react-bootstrap/Button';
 
 const NavContainer = ({ children }) => (
   <Switch>
     <Route
       path="/"
       exact
-      render={() => (
-        <>
-          { children }
-        </>
-      )}
+      render={() => children}
     />
     <Route
-      path="/stadium"
+      path="/(stadium|category|auth)"
       render={() => (
         <Container>
           { children }
@@ -39,18 +33,44 @@ class NavBar extends React.PureComponent {
     history.push('/');
   }
 
+  handleLogInClicked = () => {
+    const { history } = this.props;
+    history.push('/auth/login');
+  }
+
+  handleSignUpClicked = () => {
+    const { history } = this.props;
+    history.push('/auth/signup');
+  }
+
+  handleLogOutClicked = () => {
+    const { onSignOut } = this.props;
+    onSignOut();
+  }
+
   render() {
+    const { isAuthenticated } = this.props;
+    const buttonGroup = isAuthenticated ? (
+      <Button variant="secondary" size="sm" onClick={this.handleLogOutClicked}>Log Out</Button>
+    ) : (
+      <>
+        <Button variant="outline-secondary" size="sm" style={{ marginRight: 5 }} onClick={this.handleLogInClicked}>Log In</Button>
+        <Button variant="secondary" size="sm" onClick={this.handleSignUpClicked}>Sign Up</Button>
+      </>
+    );
     return (
       <Navbar bg="light" variant="light" fixed="top">
         <NavContainer>
-          <Row>
-            <Col xs={12}>
-              <Navbar.Brand style={{ cursor: 'pointer' }} onClick={this.handleBrandClicked}>
-                Stadiumer
-              </Navbar.Brand>
-            </Col>
-          </Row>
+          <>
+            <Navbar.Brand style={{ cursor: 'pointer' }} onClick={this.handleBrandClicked}>
+            Stadiumer
+            </Navbar.Brand>
+            <Navbar.Toggle />
+            <Navbar.Collapse className="justify-content-end">
+              {buttonGroup}
+            </Navbar.Collapse>
 
+          </>
         </NavContainer>
 
       </Navbar>
@@ -59,7 +79,9 @@ class NavBar extends React.PureComponent {
 }
 
 NavBar.propTypes = {
+  isAuthenticated: PropTypes.bool.isRequired,
   history: PropTypes.object.isRequired,
+  onSignOut: PropTypes.func.isRequired,
 };
 
 export default withRouter(NavBar);
