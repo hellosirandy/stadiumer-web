@@ -18,6 +18,8 @@ const leagues = [
   'NBA',
   'NCAA',
   'La Liga',
+  'MLS',
+  'Serie A',
 ];
 
 const SideBar = () => (

@@ -1,3 +1,5 @@
 export const STADIUM_GETTING = 'STADIUM_GETTING';
 
 export const AUTH_SIGNIN = 'AUTH_SIGNIN';
+
+export const REVIEW_CREATE = 'REVIEW_CREATE';

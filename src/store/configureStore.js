@@ -6,11 +6,13 @@ import thunk from 'redux-thunk';
 import ui from './reducers/ui';
 import stadium from './reducers/stadium';
 import auth from './reducers/auth';
+import review from './reducers/review';
 
 const rootReducer = combineReducers({
   ui,
   stadium,
   auth,
+  review,
 });
 
 let composeEnhancers = compose;

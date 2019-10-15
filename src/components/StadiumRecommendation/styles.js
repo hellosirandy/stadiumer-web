@@ -3,9 +3,7 @@ export default {
     width: '100%',
     height: 0,
     paddingTop: '60%',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover',
+    position: 'relative',
   },
   title: {
     fontSize: '1.1rem',
@@ -19,5 +17,12 @@ export default {
   container: {
     cursor: 'pointer',
     marginBottom: 8,
+  },
+  coverImg: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    top: 0,
+    objectFit: 'cover',
   },
 };

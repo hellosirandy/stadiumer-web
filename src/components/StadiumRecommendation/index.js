@@ -7,7 +7,9 @@ import styles from './styles';
 const StadiumRecommendation = ({ stadium, onClick }) => (
   <Row style={styles.container} onClick={onClick}>
     <Col xs={6}>
-      <div style={{ backgroundImage: `url('${stadium.cover}')`, ...styles.cover }} />
+      <div style={styles.cover}>
+        <img src={stadium.cover} style={styles.coverImg} alt="" />
+      </div>
     </Col>
     <Col xs={6} style={{ padding: 0 }}>
       <h1 style={styles.title}>{stadium.name}</h1>

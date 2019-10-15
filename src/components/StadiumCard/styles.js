@@ -3,9 +3,7 @@ export default {
     width: '100%',
     height: 0,
     paddingTop: '70%',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover',
+    position: 'relative',
   },
   subtitle: {
     color: 'dimgray',
@@ -22,5 +20,12 @@ export default {
   card: {
     border: 'none',
     cursor: 'pointer',
+  },
+  coverImg: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    top: 0,
+    objectFit: 'cover',
   },
 };

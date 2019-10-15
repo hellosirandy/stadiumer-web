@@ -13,7 +13,7 @@ const NavContainer = ({ children }) => (
       render={() => children}
     />
     <Route
-      path="/(stadium|category|auth)"
+      path="/(stadium|category|auth|writereview)"
       render={() => (
         <Container>
           { children }

@@ -63,12 +63,12 @@ export const getToken = () => async (dispatch) => {
       clearStorage();
       return null;
     }
-    const parsedRes = await refreshTokenAPI(token, refreshToken);
+    const parsedRes = await refreshTokenAPI(refreshToken);
     if (!parsedRes.token) {
       clearStorage();
       return null;
     }
-    dispatch(storeToken(parsedRes.token, parsedRes.expiration, parsedRes.refreshToken));
+    dispatch(storeToken(parsedRes.token, parsedRes.expirationTime, parsedRes.refreshToken));
     return parsedRes.token;
   }
   if (!token) {

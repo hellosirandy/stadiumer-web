@@ -39,6 +39,11 @@ class StadiumPage extends React.PureComponent {
     history.push(`/stadium/${id}`);
   }
 
+  handleWriteReivewClicked = () => {
+    const { stadium, history } = this.props;
+    history.push(`/writereview/${stadium.id}`);
+  }
+
   render() {
     const { stadium } = this.props;
     return stadium.id ? (
@@ -46,7 +51,7 @@ class StadiumPage extends React.PureComponent {
         <ImageCarousel images={[stadium.cover]} />
         <Container style={{ marginTop: 16, padding: 0 }}>
           <Row>
-            <Col xs={8}>
+            <Col xs={8} style={{ paddingBottom: 200, overflowY: 'scroll' }}>
               <h1 style={{ fontSize: '2rem', fontWeight: 600 }}>{stadium.name}</h1>
               <Rating
                 initialRating={0}
@@ -55,7 +60,7 @@ class StadiumPage extends React.PureComponent {
                 fullSymbol="fa fa-star fa-2x low"
               />
               <ButtonToolbar style={{ marginTop: 16 }}>
-                <Button variant="outline-primary" size="sm">Write a Review</Button>
+                <Button variant="outline-primary" size="sm" onClick={this.handleWriteReivewClicked}>Write a Review</Button>
                 <Button variant="outline-dark" size="sm" style={{ marginLeft: 8 }}>Share</Button>
                 <Button variant="outline-dark" size="sm" style={{ marginLeft: 8 }}>Save</Button>
               </ButtonToolbar>
@@ -66,6 +71,9 @@ class StadiumPage extends React.PureComponent {
                 <Map location={stadium.location} />
               </StadiumIntroSection>
 
+              <StadiumIntroSection title="Reviews">
+                123
+              </StadiumIntroSection>
             </Col>
             <Col xs={4}>
               <Card>

@@ -10,6 +10,7 @@ import StadiumPage from './components/StadiumPage';
 import CategoryPage from './components/CategoryPage';
 import AuthPage from './components/AuthPage';
 import { getToken, signOut } from './store/actions/auth';
+import WriteReviewPage from './components/WriteReviewPage';
 
 class App extends React.PureComponent {
   constructor(props) {
@@ -44,6 +45,15 @@ class App extends React.PureComponent {
             render={(p) => {
               if (isAuthenticated) {
                 return (<StadiumPage />);
+              }
+              return (<Redirect to={{ pathname: '/auth/login', state: { nextPathName: p.location.pathname, nextSearch: p.location.search } }} />);
+            }}
+          />
+          <Route
+            path="/writereview/:stadiumId"
+            render={(p) => {
+              if (isAuthenticated) {
+                return (<WriteReviewPage />);
               }
               return (<Redirect to={{ pathname: '/auth/login', state: { nextPathName: p.location.pathname, nextSearch: p.location.search } }} />);
             }}

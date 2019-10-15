@@ -18,11 +18,9 @@ class StadiumCard extends React.PureComponent {
     const { stadium } = this.props;
     return (
       <Card style={styles.card} onClick={this.handleCardClicked}>
-        <div style={{
-          ...styles.cover,
-          backgroundImage: `url("${stadium.cover}")`,
-        }}
-        />
+        <div style={styles.cover}>
+          <img src={stadium.cover} style={styles.coverImg} alt="" />
+        </div>
         <Card.Body style={styles.body}>
           <Card.Title style={{ fontSize: '1rem' }}>{stadium.name}</Card.Title>
           <Card.Subtitle style={styles.subtitle}>{stadium.locality}</Card.Subtitle>
