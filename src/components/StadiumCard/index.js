@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';
 import styles from './styles';
 import { setStadium } from '../../store/actions/stadium';
+import FlexHeightImage from '../FlexHeightImage';
 
 class StadiumCard extends React.PureComponent {
   handleCardClicked = () => {
@@ -18,9 +19,7 @@ class StadiumCard extends React.PureComponent {
     const { stadium } = this.props;
     return (
       <Card style={styles.card} onClick={this.handleCardClicked}>
-        <div style={styles.cover}>
-          <img src={stadium.cover} style={styles.coverImg} alt="" />
-        </div>
+        <FlexHeightImage image={stadium.cover} height="70%" />
         <Card.Body style={styles.body}>
           <Card.Title style={{ fontSize: '1rem' }}>{stadium.name}</Card.Title>
           <Card.Subtitle style={styles.subtitle}>{stadium.locality}</Card.Subtitle>

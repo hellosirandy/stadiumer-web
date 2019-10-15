@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import uuid from 'uuid/v4';
 import Carousel from 'react-bootstrap/Carousel';
-import styles from './styles';
+import FlexHeightImage from '../FlexHeightImage';
 
 class ImageCarousel extends React.PureComponent {
   render() {
@@ -11,11 +11,7 @@ class ImageCarousel extends React.PureComponent {
       <Carousel>
         {images.map((image) => (
           <Carousel.Item key={uuid()}>
-            <div style={{
-              backgroundImage: `url('${image}')`,
-              ...styles.carousel,
-            }}
-            />
+            <FlexHeightImage image={image} height="30%" />
           </Carousel.Item>
         ))}
       </Carousel>

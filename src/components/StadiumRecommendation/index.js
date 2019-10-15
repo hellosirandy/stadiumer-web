@@ -3,13 +3,12 @@ import PropTypes from 'prop-types';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import styles from './styles';
+import FlexHeightImage from '../FlexHeightImage';
 
 const StadiumRecommendation = ({ stadium, onClick }) => (
   <Row style={styles.container} onClick={onClick}>
     <Col xs={6}>
-      <div style={styles.cover}>
-        <img src={stadium.cover} style={styles.coverImg} alt="" />
-      </div>
+      <FlexHeightImage image={stadium.cover} height="60%" />
     </Col>
     <Col xs={6} style={{ padding: 0 }}>
       <h1 style={styles.title}>{stadium.name}</h1>
