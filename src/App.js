@@ -11,6 +11,7 @@ import CategoryPage from './components/CategoryPage';
 import AuthPage from './components/AuthPage';
 import { getToken, signOut } from './store/actions/auth';
 import WriteReviewPage from './components/WriteReviewPage';
+import { homePageFirstLoad } from './store/actions/stadium';
 
 class App extends React.PureComponent {
   constructor(props) {
@@ -21,6 +22,7 @@ class App extends React.PureComponent {
     props.onGetToken().then(() => {
       this.setState({ loaded: true });
     });
+    props.onFirstLoad();
   }
 
   render() {
@@ -30,40 +32,14 @@ class App extends React.PureComponent {
       <Router>
         <NavBar isAuthenticated={isAuthenticated} onSignOut={onSignOut} />
         <Switch>
-          <Route
-            path="/"
-            exact
-            render={(p) => {
-              if (isAuthenticated) {
-                return (<HomePage />);
-              }
-              return (<Redirect to={{ pathname: '/auth/login', state: { nextPathName: p.location.pathname, nextSearch: p.location.search } }} />);
-            }}
-          />
-          <Route
-            path="/stadium/:stadiumId"
-            render={(p) => {
-              if (isAuthenticated) {
-                return (<StadiumPage />);
-              }
-              return (<Redirect to={{ pathname: '/auth/login', state: { nextPathName: p.location.pathname, nextSearch: p.location.search } }} />);
-            }}
-          />
+          <Route path="/" exact component={HomePage} />
+          <Route path="/stadium/:stadiumId" component={StadiumPage} />
+          <Route path="/category" component={CategoryPage} />
           <Route
             path="/writereview/:stadiumId"
             render={(p) => {
               if (isAuthenticated) {
                 return (<WriteReviewPage />);
-              }
-              return (<Redirect to={{ pathname: '/auth/login', state: { nextPathName: p.location.pathname, nextSearch: p.location.search } }} />);
-            }}
-          />
-
-          <Route
-            path="/category"
-            render={(p) => {
-              if (isAuthenticated) {
-                return (<CategoryPage />);
               }
               return (<Redirect to={{ pathname: '/auth/login', state: { nextPathName: p.location.pathname, nextSearch: p.location.search } }} />);
             }}
@@ -103,6 +79,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   onGetToken: () => dispatch(getToken()),
   onSignOut: () => dispatch(signOut()),
+  onFirstLoad: () => dispatch(homePageFirstLoad()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

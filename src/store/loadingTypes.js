@@ -1,4 +1,4 @@
-export const STADIUM_GETTING = 'STADIUM_GETTING';
+export const STADIUM_GET = 'STADIUM_GET';
 
 export const AUTH_SIGNIN = 'AUTH_SIGNIN';
 

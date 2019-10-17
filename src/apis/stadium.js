@@ -11,4 +11,11 @@ export const getStadiumsAPI = (params) => {
   return api.get(options);
 };
 
+export const firstLoadStadiumAPI = () => {
+  const options = {
+    endpoint: '/stadium/firstload',
+  };
+  return api.get(options);
+};
+
 export const addStadium = () => api.post({});

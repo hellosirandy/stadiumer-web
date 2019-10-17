@@ -1,22 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { getStadiums } from '../../store/actions/stadium';
 import StadiumCard from '../StadiumCard';
 
 class StadiumList extends React.PureComponent {
-  componentDidMount() {
-    const {
-      onGetStadium, type, value, limit,
-    } = this.props;
-    onGetStadium({ type, value, limit });
-  }
-
   render() {
-    const { stadiums, type, value } = this.props;
-    const title = type === '' ? 'Recommended' : value;
+    const { stadiums, title } = this.props;
     return stadiums ? (
       <>
         <Row style={{ margin: 0 }}>
@@ -35,26 +25,12 @@ class StadiumList extends React.PureComponent {
 }
 
 StadiumList.defaultProps = {
-  type: '',
-  value: '',
-  limit: 6,
   stadiums: [],
 };
 
 StadiumList.propTypes = {
+  title: PropTypes.string.isRequired,
   stadiums: PropTypes.array,
-  onGetStadium: PropTypes.func.isRequired,
-  type: PropTypes.string,
-  value: PropTypes.string,
-  limit: PropTypes.number,
 };
 
-const mapStateToProps = (state, props) => ({
-  stadiums: state.stadium.stadiums[props.value || 'Recommended'],
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onGetStadium: (options) => dispatch(getStadiums(options)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(StadiumList);
+export default StadiumList;
