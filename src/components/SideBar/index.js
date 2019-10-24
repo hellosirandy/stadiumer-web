@@ -22,6 +22,10 @@ const leagues = [
   'Serie A',
 ];
 
+const tournaments = [
+  'UEFA Euro 2016',
+];
+
 const SideBar = () => (
   <div style={styles.container}>
     <ListGroup>
@@ -48,6 +52,18 @@ const SideBar = () => (
           href={`/#/category?type=league&value=${encodeURIComponent(league)}`}
         >
           {league}
+        </ListGroup.Item>
+      ))}
+      <ListGroup.Item as="div" style={styles.divider}><hr style={{ marginTop: '0.5rem', marginBottom: '0.5rem' }} /></ListGroup.Item>
+      <ListGroup.Item as="h6" style={styles.listItem}>Tournaments</ListGroup.Item>
+      {tournaments.map((tournament) => (
+        <ListGroup.Item
+          key={tournament}
+          action
+          style={styles.listItem}
+          href={`/#/category?type=tournament&value=${encodeURIComponent(tournament)}`}
+        >
+          {tournament}
         </ListGroup.Item>
       ))}
     </ListGroup>

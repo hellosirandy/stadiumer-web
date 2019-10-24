@@ -7,12 +7,14 @@ import ui from './reducers/ui';
 import stadium from './reducers/stadium';
 import auth from './reducers/auth';
 import review from './reducers/review';
+import user from './reducers/user';
 
 const rootReducer = combineReducers({
   ui,
   stadium,
   auth,
   review,
+  user,
 });
 
 let composeEnhancers = compose;

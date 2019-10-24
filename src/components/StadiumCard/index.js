@@ -7,6 +7,7 @@ import Card from 'react-bootstrap/Card';
 import styles from './styles';
 import { setStadium } from '../../store/actions/stadium';
 import FlexHeightImage from '../FlexHeightImage';
+import { GOOGLE_MAP_API_KEY } from '../../secrets';
 
 class StadiumCard extends React.PureComponent {
   handleCardClicked = () => {
@@ -17,9 +18,10 @@ class StadiumCard extends React.PureComponent {
 
   render() {
     const { stadium } = this.props;
+    const cover = `https://maps.googleapis.com/maps/api/place/photo?key=${GOOGLE_MAP_API_KEY}&photoreference=${stadium.photoReferences[0]}&maxwidth=300`;
     return (
       <Card style={styles.card} onClick={this.handleCardClicked}>
-        <FlexHeightImage image={stadium.cover} height="70%" />
+        <FlexHeightImage image={cover} height="70%" />
         <Card.Body style={styles.body}>
           <Card.Title style={{ fontSize: '1rem' }}>{stadium.name}</Card.Title>
           <Card.Subtitle style={styles.subtitle}>{stadium.locality}</Card.Subtitle>

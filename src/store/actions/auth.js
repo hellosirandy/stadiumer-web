@@ -1,7 +1,8 @@
 import { uiStartLoading, uiStopLoading } from './ui';
 import { AUTH_SIGNIN } from '../loadingTypes';
 import { signInAPI, refreshTokenAPI } from '../../apis/auth';
-import { AUTH_SET_TOKEN } from '../actionTypes';
+import { AUTH_SET_TOKEN, USER_SET_CURRET } from '../actionTypes';
+import { getCurrentUserAPI } from '../../apis/user';
 
 const setToken = (token) => ({
   type: AUTH_SET_TOKEN,
@@ -19,6 +20,11 @@ export const signIn = (email, password) => async (dispatch) => {
   dispatch(uiStartLoading(AUTH_SIGNIN));
   try {
     const { token, expirationTime, refreshToken } = await signInAPI(email, password);
+    const currentUser = await getCurrentUserAPI(token);
+    dispatch({
+      type: USER_SET_CURRET,
+      user: currentUser,
+    });
     dispatch(storeToken(token, expirationTime, refreshToken));
   } catch (e) {
     console.log(e);
@@ -69,11 +75,22 @@ export const getToken = () => async (dispatch) => {
       return null;
     }
     dispatch(storeToken(parsedRes.token, parsedRes.expirationTime, parsedRes.refreshToken));
+
+    const currentUser = await getCurrentUserAPI(parsedRes.token);
+    dispatch({
+      type: USER_SET_CURRET,
+      user: currentUser,
+    });
     return parsedRes.token;
   }
   if (!token) {
     return null;
   }
+  const currentUser = await getCurrentUserAPI(token);
+  dispatch({
+    type: USER_SET_CURRET,
+    user: currentUser,
+  });
   return token;
 };
 

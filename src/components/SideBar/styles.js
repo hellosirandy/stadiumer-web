@@ -8,8 +8,10 @@ export default {
   container: {
     width: 200,
     paddingTop: 60,
+    paddingBottom: 60,
     height: '100%',
     position: 'fixed',
+    overflowY: 'scroll',
   },
   listItem,
   divider: {

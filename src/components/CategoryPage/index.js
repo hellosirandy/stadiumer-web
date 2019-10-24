@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import queryString from 'query-string';
 import { withRouter } from 'react-router-dom';
-import Container from 'react-bootstrap/Container';
 import StadiumList from '../StadiumList';
 import { getStadiums } from '../../store/actions/stadium';
+import MainContainer from '../MainContainer';
 
 class CategoryPage extends React.PureComponent {
   constructor(props) {
@@ -26,9 +26,9 @@ class CategoryPage extends React.PureComponent {
     const { title } = this.state;
     const { groupStadiums } = this.props;
     return (
-      <Container style={{ padding: 0, paddingTop: 56 }}>
+      <MainContainer style={{ padding: 0, paddingTop: 56 }}>
         <StadiumList title={title} stadiums={groupStadiums[title]} />
-      </Container>
+      </MainContainer>
     );
   }
 }

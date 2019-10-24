@@ -4,10 +4,11 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { connect } from 'react-redux';
 import Navbar from 'react-bootstrap/Navbar';
-import Container from 'react-bootstrap/Container';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import Button from 'react-bootstrap/Button';
 import { STADIUM_GET } from '../../store/loadingTypes';
+import MainContainer from '../MainContainer';
+import NavBarSearch from '../NavBarSearch';
 
 const NavContainer = ({ children }) => (
   <Switch>
@@ -17,11 +18,11 @@ const NavContainer = ({ children }) => (
       render={() => children}
     />
     <Route
-      path="/(stadium|category|auth|writereview)"
+      path="/(stadium|category|auth|writereview|userprofile|updateprofile)"
       render={() => (
-        <Container>
+        <MainContainer style={{ maxWidth: 1000 }}>
           { children }
-        </Container>
+        </MainContainer>
       )}
     />
   </Switch>
@@ -82,11 +83,19 @@ class NavBar extends React.PureComponent {
     onSignOut();
   }
 
+  handleProfileClicked = () => {
+    const { history } = this.props;
+    history.push('/userprofile/myprofile');
+  }
+
   render() {
     const { isAuthenticated } = this.props;
     const { progress, displayProgress } = this.state;
     const buttonGroup = isAuthenticated ? (
-      <Button variant="secondary" size="sm" onClick={this.handleLogOutClicked}>Log Out</Button>
+      <>
+        <Button variant="outline-secondary" size="sm" style={{ marginRight: 5 }} onClick={this.handleProfileClicked}>My Profile</Button>
+        <Button variant="secondary" size="sm" onClick={this.handleLogOutClicked}>Log Out</Button>
+      </>
     ) : (
       <>
         <Button variant="outline-secondary" size="sm" style={{ marginRight: 5 }} onClick={this.handleLogInClicked}>Log In</Button>
@@ -112,11 +121,11 @@ class NavBar extends React.PureComponent {
               <Navbar.Brand style={{ cursor: 'pointer' }} onClick={this.handleBrandClicked}>
             Stadiumer
               </Navbar.Brand>
+              <NavBarSearch />
               <Navbar.Toggle />
               <Navbar.Collapse className="justify-content-end">
                 {buttonGroup}
               </Navbar.Collapse>
-
             </>
           </NavContainer>
 

@@ -4,11 +4,12 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import styles from './styles';
 import FlexHeightImage from '../FlexHeightImage';
+import { GOOGLE_MAP_API_KEY } from '../../secrets';
 
 const StadiumRecommendation = ({ stadium, onClick }) => (
   <Row style={styles.container} onClick={onClick}>
     <Col xs={6}>
-      <FlexHeightImage image={stadium.cover} height="60%" />
+      <FlexHeightImage image={`https://maps.googleapis.com/maps/api/place/photo?key=${GOOGLE_MAP_API_KEY}&photoreference=${stadium.photoReferences[0]}&maxwidth=300`} height="60%" />
     </Col>
     <Col xs={6} style={{ padding: 0 }}>
       <h1 style={styles.title}>{stadium.name}</h1>

@@ -15,3 +15,13 @@ export const createReviewAPI = (token, rating, review, stadiumId) => {
   };
   return api.post(options);
 };
+
+export const getReviewsAPI = (stadiumId) => {
+  const options = {
+    endpoint: '/review',
+    params: {
+      stadiumId,
+    },
+  };
+  return api.get(options);
+};
