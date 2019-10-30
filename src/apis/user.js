@@ -33,7 +33,6 @@ export const getUserReviewAPI = (id) => {
 
 export const updateUserAPI = (id, updates) => {
   if (updates.profilePic) {
-    // const ref = storage.ref().child('mountains.jpg');
     const ref = storage.ref().child(`images/profile/${id}/${Date.now()}.jpg`);
     return ref.putString(updates.profilePic, 'data_url').then(() => ref.getDownloadURL()).then((url) => {
       const options = {

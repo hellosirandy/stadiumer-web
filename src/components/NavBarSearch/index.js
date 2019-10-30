@@ -6,10 +6,11 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import FormControl from 'react-bootstrap/FormControl';
 import InputGroup from 'react-bootstrap/InputGroup';
-// import Dropdown from 'react-bootstrap/Dropdown';
-// import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 import ListGroup from 'react-bootstrap/ListGroup';
-import { searchStadium } from '../../store/actions/stadium';
+import { search } from '../../store/actions/search';
+import { getStadium } from '../../store/actions/stadium';
 
 let timeout = null;
 
@@ -19,6 +20,7 @@ class NavBarSearch extends React.PureComponent {
     this.state = {
       searching: false,
       inputValue: '',
+      searchType: 'stadium',
     };
   }
 
@@ -47,41 +49,52 @@ class NavBarSearch extends React.PureComponent {
   handleInputChange = ({ target: { value } }) => {
     this.setState({ inputValue: value });
     const { onSearchStadium } = this.props;
+    const { searchType } = this.state;
     clearTimeout(timeout);
     timeout = setTimeout(() => {
       if (value) {
-        onSearchStadium(value);
+        onSearchStadium(searchType, value);
       }
     }, 500);
   }
 
-  handleResultClicked = (id) => () => {
-    const { history } = this.props;
-    history.push(`/stadium/${id}`);
+  handleResultClicked = (id) => async () => {
+    const { history, onGetStadium } = this.props;
+    const { searchType } = this.state;
+    if (searchType === 'stadium') {
+      await onGetStadium(id);
+      history.push(`/stadium/${id}`);
+    } else if (searchType === 'user') {
+      history.push(`/userprofile/${id}`);
+    }
     this.setState({ searching: false });
   }
 
+  handleDropdownSelect = (e) => {
+    this.setState({ searchType: e });
+  }
+
   render() {
-    const { searching, inputValue } = this.state;
+    const { searching, inputValue, searchType } = this.state;
     const { searchResult } = this.props;
     return (
       <Form inline>
         <InputGroup>
-          {/* <DropdownButton
-            size="sm"
-            as={InputGroup.Prepend}
-            variant="outline-dark"
-            title="Name"
-          >
-            <Dropdown.Item href="#">Name</Dropdown.Item>
-            <Dropdown.Item href="#">League</Dropdown.Item>
-            <Dropdown.Item href="#">Tournament</Dropdown.Item>
-            <Dropdown.Item href="#">Sport</Dropdown.Item>
-          </DropdownButton> */}
+          <Dropdown onSelect={this.handleDropdownSelect}>
+            <DropdownButton
+              size="sm"
+              as={InputGroup.Prepend}
+              variant="outline-dark"
+              title={searchType}
+            >
+              <Dropdown.Item eventKey="stadium">stadium</Dropdown.Item>
+              <Dropdown.Item eventKey="user">user</Dropdown.Item>
+            </DropdownButton>
+          </Dropdown>
+
           <div ref={this.setWrapperRef}>
             <FormControl
               onFocus={this.handleSearchFocus}
-              // onBlur={this.handleSearchFocus(false)}
               onChange={this.handleInputChange}
               type="text"
               placeholder="Search"
@@ -95,7 +108,7 @@ class NavBarSearch extends React.PureComponent {
               width: 250, position: 'absolute', top: 31, maxHeight: 350, overflowY: 'scroll',
             }}
             >
-              {searchResult.map((result) => (
+              {searchResult[searchType].map((result) => (
                 <ListGroup.Item
                   key={result.id}
                   action
@@ -116,15 +129,18 @@ class NavBarSearch extends React.PureComponent {
 
 NavBarSearch.propTypes = {
   onSearchStadium: PropTypes.func.isRequired,
-  searchResult: PropTypes.array.isRequired,
+  searchResult: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
+  onGetStadium: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  searchResult: state.stadium.searchResult,
+  searchResult: state.search.results,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onSearchStadium: (query) => dispatch(searchStadium(query)),
+  onSearchStadium: (type, value) => dispatch(search(type, value)),
+  onGetStadium: (id) => dispatch(getStadium(id)),
 });
 
 export default compose(

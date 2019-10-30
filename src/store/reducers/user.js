@@ -4,10 +4,18 @@ const initialState = {
   currentUser: {
     profile: {},
     reviews: [],
+    follow: {
+      following: [],
+      follower: [],
+    },
   },
   user: {
     profile: {},
     reviews: [],
+    follow: {
+      following: [],
+      follower: [],
+    },
   },
 };
 

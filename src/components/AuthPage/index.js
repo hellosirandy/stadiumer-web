@@ -6,8 +6,9 @@ import compose from 'recompose/compose';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
 import styles from './styles';
-import { signIn } from '../../store/actions/auth';
+import { signIn, signUp } from '../../store/actions/auth';
 
 class AuthPage extends React.PureComponent {
   constructor(props) {
@@ -21,6 +22,12 @@ class AuthPage extends React.PureComponent {
           value: '',
         },
         confirmPassword: {
+          value: '',
+        },
+        firstName: {
+          value: '',
+        },
+        lastName: {
           value: '',
         },
       },
@@ -42,10 +49,24 @@ class AuthPage extends React.PureComponent {
 
   handleFormSubmitted = async (e) => {
     e.preventDefault();
-    const { controls: { email, password } } = this.state;
+    const {
+      controls: {
+        email: { value: email },
+        password: { value: password },
+        firstName: { value: firstName },
+        lastName: { value: lastName },
+      },
+    } = this.state;
+    const { match, onSignIn, onSignUp } = this.props;
+    const isSignUp = match.params.action === 'signup';
     try {
-      const { onSignIn } = this.props;
-      await onSignIn(email.value, password.value);
+      if (isSignUp) {
+        await onSignUp({
+          email, password, firstName, lastName,
+        });
+      } else {
+        await onSignIn(email, password);
+      }
     } catch (err) {
       this.setState({ errorMsg: err });
     }
@@ -58,6 +79,19 @@ class AuthPage extends React.PureComponent {
       <Form.Group>
         <Form.Label>Confirm Password</Form.Label>
         <Form.Control type="password" placeholder="Confirm Password" onChange={this.handleInputChange('confirmPassword')} />
+      </Form.Group>
+    ) : null;
+    const nameInput = isSignUp ? (
+      <Form.Group>
+        <Form.Label>Name</Form.Label>
+        <Form.Row>
+          <Col>
+            <Form.Control placeholder="First name" onChange={this.handleInputChange('firstName')} />
+          </Col>
+          <Col>
+            <Form.Control placeholder="Last name" onChange={this.handleInputChange('lastName')} />
+          </Col>
+        </Form.Row>
       </Form.Group>
     ) : null;
     const title = isSignUp ? 'Sign Up for Stadiumer' : 'Log In to Stadiumer';
@@ -76,11 +110,11 @@ class AuthPage extends React.PureComponent {
       <Container style={styles.container}>
         <Form style={{ width: 500 }} onSubmit={this.handleFormSubmitted}>
           <Form.Text as="h1" style={styles.title}>{title}</Form.Text>
+          {nameInput}
           <Form.Group controlId="formBasicEmail">
             <Form.Label>Email address</Form.Label>
             <Form.Control type="email" placeholder="Enter email" onChange={this.handleInputChange('email')} />
           </Form.Group>
-
           <Form.Group>
             <Form.Label>Password</Form.Label>
             <Form.Control type="password" placeholder="Password" onChange={this.handleInputChange('password')} />
@@ -106,10 +140,12 @@ class AuthPage extends React.PureComponent {
 AuthPage.propTypes = {
   match: PropTypes.object.isRequired,
   onSignIn: PropTypes.func.isRequired,
+  onSignUp: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   onSignIn: (email, password) => dispatch(signIn(email, password)),
+  onSignUp: (options) => dispatch(signUp(options)),
 });
 
 export default compose(

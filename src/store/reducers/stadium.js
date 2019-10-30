@@ -1,5 +1,5 @@
 import {
-  STADIUM_SET_ALL, STADIUM_SET_SINGLE, STADIUM_SET_DETAIL, STADIUM_SET_SEARCH,
+  STADIUM_SET_ALL, STADIUM_SET_SINGLE, STADIUM_SET_DETAIL,
 } from '../actionTypes';
 
 const initialState = {
@@ -31,11 +31,6 @@ const reducer = (state = initialState, action) => {
           rating: action.rating,
           recommendations: action.recommendations,
         },
-      };
-    case STADIUM_SET_SEARCH:
-      return {
-        ...state,
-        searchResult: action.searchResult,
       };
     default:
       return state;

@@ -39,27 +39,26 @@ class NavBar extends React.PureComponent {
       progress: 0,
       displayProgress: true,
     };
-    if (props.isLoading) {
-      setTimeout(() => {
-        const { progress } = this.state;
-        if (progress < 60) {
-          this.setState({ progress: 60 });
-        }
-      }, 300);
-    }
   }
 
   componentDidUpdate(prevProps) {
     const { isLoading } = this.props;
     if (prevProps.isLoading && !isLoading) {
-      this.setState({
-        progress: 100,
-      });
+      this.setState({ progress: 100 });
       setTimeout(() => {
         this.setState({
           displayProgress: false,
+          progress: 0,
         });
       }, 600);
+    } else if (!prevProps.isLoading && isLoading) {
+      const { progress } = this.state;
+      this.setState({ displayProgress: true });
+      setTimeout(() => {
+        if (progress < 60) {
+          this.setState({ progress: 60 });
+        }
+      }, 50);
     }
   }
 

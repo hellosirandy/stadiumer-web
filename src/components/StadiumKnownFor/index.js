@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import styles from './styles';
@@ -24,6 +25,14 @@ const StadiumKnownFor = ({ stadium }) => (
       </Col>
       <Col style={styles.content}>
         <span>{stadium.sports.join(', ')}</span>
+      </Col>
+    </Row>
+    <Row>
+      <Col xs={2} style={styles.title}>
+        <span>Opened</span>
+      </Col>
+      <Col style={styles.content}>
+        <span>{moment(stadium.opened).format('L')}</span>
       </Col>
     </Row>
     <Row>

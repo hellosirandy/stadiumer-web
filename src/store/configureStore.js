@@ -8,6 +8,7 @@ import stadium from './reducers/stadium';
 import auth from './reducers/auth';
 import review from './reducers/review';
 import user from './reducers/user';
+import search from './reducers/search';
 
 const rootReducer = combineReducers({
   ui,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   auth,
   review,
   user,
+  search,
 });
 
 let composeEnhancers = compose;

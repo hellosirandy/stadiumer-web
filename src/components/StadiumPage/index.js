@@ -37,15 +37,10 @@ class StadiumPage extends React.PureComponent {
     window.scrollTo(0, 0);
   }
 
-  componentDidUpdate(prevProps) {
-    const { match, onGetStadium } = this.props;
-    if (prevProps.match.params.stadiumId !== match.params.stadiumId) {
-      onGetStadium(match.params.stadiumId);
-    }
-  }
-
-  handleRecommendationClicked = (id) => () => {
-    const { history } = this.props;
+  handleRecommendationClicked = (id) => async () => {
+    const { history, onGetStadium } = this.props;
+    await onGetStadium(id);
+    window.scrollTo(0, 0);
     history.push(`/stadium/${id}`);
   }
 

@@ -1,10 +1,10 @@
 import { uiStartLoading, uiStopLoading } from './ui';
-import { STADIUM_GET, STADIUM_SEARCH } from '../loadingTypes';
+import { STADIUM_GET } from '../loadingTypes';
 import {
-  STADIUM_SET_ALL, STADIUM_SET_SINGLE, STADIUM_SET_DETAIL, STADIUM_SET_SEARCH,
+  STADIUM_SET_ALL, STADIUM_SET_SINGLE, STADIUM_SET_DETAIL,
 } from '../actionTypes';
 import {
-  getStadiumsAPI, firstLoadStadiumAPI, getStadiumDetailAPI, searchStadiumAPI,
+  getStadiumsAPI, firstLoadStadiumAPI, getStadiumDetailAPI,
 } from '../../apis/stadium';
 
 export const getStadiums = (options) => async (dispatch) => {
@@ -47,20 +47,11 @@ export const getStadium = (id) => async (dispatch) => {
 };
 
 export const getStadiumDetail = (id) => async (dispatch) => {
-  dispatch(uiStartLoading(STADIUM_GET));
+  // dispatch(uiStartLoading(STADIUM_GET));
   const stadiumDetail = await getStadiumDetailAPI(id);
   dispatch({
     type: STADIUM_SET_DETAIL,
     rating: stadiumDetail.rating,
     recommendations: stadiumDetail.recommendations,
-  });
-};
-
-export const searchStadium = (query) => async (dispatch) => {
-  dispatch(uiStartLoading(STADIUM_SEARCH));
-  const searchResult = await searchStadiumAPI(query);
-  dispatch({
-    type: STADIUM_SET_SEARCH,
-    searchResult,
   });
 };

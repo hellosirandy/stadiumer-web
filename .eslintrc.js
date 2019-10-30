@@ -17,6 +17,7 @@ module.exports = {
     "window": true,
     "document": true,
     "fetch": true,
-    "localStorage": true
+    "localStorage": true,
+    "FileReader": true
   }
 };

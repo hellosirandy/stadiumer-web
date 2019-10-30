@@ -1,6 +1,8 @@
 import { uiStartLoading, uiStopLoading } from './ui';
-import { AUTH_SIGNIN } from '../loadingTypes';
-import { signInAPI, refreshTokenAPI } from '../../apis/auth';
+import { AUTH_SIGNIN, AUTH_RESET_PASSWORD } from '../loadingTypes';
+import {
+  signInAPI, refreshTokenAPI, signUpAPI, resetPasswordAPI,
+} from '../../apis/auth';
 import { AUTH_SET_TOKEN, USER_SET_CURRET } from '../actionTypes';
 import { getCurrentUserAPI } from '../../apis/user';
 
@@ -14,6 +16,27 @@ const storeToken = (token, expirationTime, refreshToken) => (dispatch) => {
   localStorage.setItem('stadiumer:auth:token', token);
   localStorage.setItem('stadiumer:auth:expirationTime', expirationTime.toString());
   localStorage.setItem('stadiumer:auth:refreshToken', refreshToken);
+};
+
+export const signUp = (options) => async (dispatch) => {
+  dispatch(uiStartLoading(AUTH_SIGNIN));
+  try {
+    const { token, expirationTime, refreshToken } = await signUpAPI(
+      options.email,
+      options.password,
+      options.firstName,
+      options.lastName,
+    );
+    const currentUser = await getCurrentUserAPI(token);
+    dispatch({
+      type: USER_SET_CURRET,
+      user: currentUser,
+    });
+    dispatch(storeToken(token, expirationTime, refreshToken));
+  } catch (e) {
+    console.log(e);
+  }
+  dispatch(uiStopLoading(AUTH_SIGNIN));
 };
 
 export const signIn = (email, password) => async (dispatch) => {
@@ -100,4 +123,11 @@ export const signOut = () => (dispatch) => {
     type: AUTH_SET_TOKEN,
     token: '',
   });
+};
+
+export const resetPassword = () => async (dispatch, getState) => {
+  dispatch(uiStartLoading(AUTH_RESET_PASSWORD));
+  const { token } = getState().auth;
+  await resetPasswordAPI(token);
+  dispatch(uiStopLoading(AUTH_RESET_PASSWORD));
 };

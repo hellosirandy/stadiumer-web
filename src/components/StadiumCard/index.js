@@ -10,9 +10,9 @@ import FlexHeightImage from '../FlexHeightImage';
 import { GOOGLE_MAP_API_KEY } from '../../secrets';
 
 class StadiumCard extends React.PureComponent {
-  handleCardClicked = () => {
+  handleCardClicked = async () => {
     const { stadium, history, onSetStadium } = this.props;
-    onSetStadium(stadium);
+    await onSetStadium(stadium);
     history.push(`/stadium/${stadium.id}`);
   }
 
