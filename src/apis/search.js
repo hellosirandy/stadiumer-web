@@ -1,6 +1,6 @@
 import API from '@hellosirandy/rest-api-wrapper';
 
-const baseURL = 'http://localhost:3001';
+const baseURL = process.env.REACT_APP_ENDPOINT;
 const api = new API(baseURL);
 
 export const searchAPI = (type, value) => {

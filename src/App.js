@@ -1,98 +1,78 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react';
 import {
   HashRouter as Router, Route, Switch, Redirect,
 } from 'react-router-dom';
-import { connect } from 'react-redux';
-import HomePage from './components/HomePage';
+import { useSelector, useDispatch } from 'react-redux';
+import BrowsePage from './components/BrowsePage';
 import NavBar from './components/NavBar';
 import StadiumPage from './components/StadiumPage';
 import CategoryPage from './components/CategoryPage';
 import AuthPage from './components/AuthPage';
-import { getToken, signOut } from './store/actions/auth';
+import { getToken } from './store/actions/auth';
 import WriteReviewPage from './components/WriteReviewPage';
 import { homePageFirstLoad } from './store/actions/stadium';
 import UserProfilePage from './components/UserProfilePage';
 import UpdateProfilePage from './components/UpdateProfilePage';
+import HomePage from './components/HomePage';
 
-class App extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loaded: false,
-    };
-    props.onGetToken().then(() => {
-      this.setState({ loaded: true });
+const App = () => {
+  const [loaded, setLoaded] = useState(false);
+  const isAuthenticated = useSelector((state) => Boolean(state.auth.token));
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getToken()).then(() => {
+      setLoaded(true);
     });
-    props.onFirstLoad();
-  }
+    dispatch(homePageFirstLoad());
+  }, [dispatch]);
 
-  render() {
-    const { isAuthenticated, onSignOut } = this.props;
-    const { loaded } = this.state;
-    return loaded ? (
-      <Router>
-        <NavBar isAuthenticated={isAuthenticated} onSignOut={onSignOut} />
-        <Switch>
-          <Route path="/" exact component={HomePage} />
-          <Route path="/stadium/:stadiumId" component={StadiumPage} />
-          <Route path="/category" component={CategoryPage} />
-          <Route path="/userprofile/:userId" component={UserProfilePage} />
-          <Route
-            path="/writereview/:stadiumId"
-            render={(p) => {
-              if (isAuthenticated) {
-                return (<WriteReviewPage />);
-              }
-              return (<Redirect to={{ pathname: '/auth/login', state: { nextPathName: p.location.pathname, nextSearch: p.location.search } }} />);
-            }}
-          />
-          <Route
-            path="/updateprofile"
-            render={(p) => {
-              if (isAuthenticated) {
-                return (<UpdateProfilePage />);
-              }
-              return (<Redirect to={{ pathname: '/auth/login', state: { nextPathName: p.location.pathname, nextSearch: p.location.search } }} />);
-            }}
-          />
-          <Route
-            path="/auth/:action"
-            render={({ location }) => {
-              if (isAuthenticated) {
-                return (
-                  <Redirect
-                    to={
-                        (location.state && location.state.nextPathName)
-                          ? (location.state.nextPathName + location.state.nextSearch) : '/'
-                      }
-                  />
-                );
-              }
-              return <AuthPage />;
-            }}
-          />
-        </Switch>
-      </Router>
-    ) : null;
-  }
-}
-
-App.propTypes = {
-  isAuthenticated: PropTypes.bool.isRequired,
-  onGetToken: PropTypes.func.isRequired,
-  onSignOut: PropTypes.func.isRequired,
-  onFirstLoad: PropTypes.func.isRequired,
+  return loaded ? (
+    <Router>
+      <NavBar />
+      <Switch>
+        <Route path="/" exact component={HomePage} />
+        <Route path="/browse" component={BrowsePage} />
+        <Route path="/stadium/:stadiumId" component={StadiumPage} />
+        <Route path="/category" component={CategoryPage} />
+        <Route path="/userprofile/:userId" component={UserProfilePage} />
+        <Route
+          path="/writereview/:stadiumId"
+          render={(p) => {
+            if (isAuthenticated) {
+              return (<WriteReviewPage />);
+            }
+            return (<Redirect to={{ pathname: '/auth/login', state: { nextPathName: p.location.pathname, nextSearch: p.location.search } }} />);
+          }}
+        />
+        <Route
+          path="/updateprofile"
+          render={(p) => {
+            if (isAuthenticated) {
+              return (<UpdateProfilePage />);
+            }
+            return (<Redirect to={{ pathname: '/auth/login', state: { nextPathName: p.location.pathname, nextSearch: p.location.search } }} />);
+          }}
+        />
+        <Route
+          path="/auth/:action"
+          render={({ location }) => {
+            if (isAuthenticated) {
+              return (
+                <Redirect
+                  to={
+                      (location.state && location.state.nextPathName)
+                        ? (location.state.nextPathName + location.state.nextSearch) : '/'
+                    }
+                />
+              );
+            }
+            return <AuthPage />;
+          }}
+        />
+      </Switch>
+    </Router>
+  ) : null;
 };
 
-const mapStateToProps = (state) => ({
-  isAuthenticated: Boolean(state.auth.token),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onGetToken: () => dispatch(getToken()),
-  onSignOut: () => dispatch(signOut()),
-  onFirstLoad: () => dispatch(homePageFirstLoad()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;

@@ -10,3 +10,6 @@ export const USER_GET = 'USER_GET';
 export const USER_UPDATE = 'USER_UPDATE';
 
 export const SEARCH_GET = 'SEARCH_GET';
+
+export const FOLLOW_GET_REVIEW = 'FOLLOW_GET_REVIEW';
+export const FOLLOW_FOLLOW = 'FOLLOW_FOLLOW';

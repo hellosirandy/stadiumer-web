@@ -32,7 +32,7 @@ const StadiumKnownFor = ({ stadium }) => (
         <span>Opened</span>
       </Col>
       <Col style={styles.content}>
-        <span>{moment(stadium.opened).format('L')}</span>
+        <span>{moment(stadium.opened).utc().format('L')}</span>
       </Col>
     </Row>
     <Row>

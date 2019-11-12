@@ -1,24 +1,24 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Route, Switch, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Navbar from 'react-bootstrap/Navbar';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import Button from 'react-bootstrap/Button';
 import { STADIUM_GET } from '../../store/loadingTypes';
 import MainContainer from '../MainContainer';
 import NavBarSearch from '../NavBarSearch';
+import { signOut } from '../../store/actions/auth';
 
 const NavContainer = ({ children }) => (
   <Switch>
     <Route
-      path="/"
+      path="/(|browse|category)"
       exact
       render={() => children}
     />
     <Route
-      path="/(stadium|category|auth|writereview|userprofile|updateprofile)"
+      path="/(stadium|auth|writereview|userprofile|updateprofile)"
       render={() => (
         <MainContainer style={{ maxWidth: 1000 }}>
           { children }
@@ -32,79 +32,69 @@ NavContainer.propTypes = {
   children: PropTypes.element.isRequired,
 };
 
-class NavBar extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      progress: 0,
-      displayProgress: true,
-    };
-  }
+const NavBar = ({
+  history,
+}) => {
+  const isAuthenticated = useSelector((state) => Boolean(state.auth.token));
+  const isLoading = useSelector((state) => Boolean(state.ui.isLoading[STADIUM_GET]));
+  const dispatch = useDispatch();
+  const [progress, setProgress] = useState(0);
+  const [displayProgress, setDisplayProgress] = useState(true);
 
-  componentDidUpdate(prevProps) {
-    const { isLoading } = this.props;
-    if (prevProps.isLoading && !isLoading) {
-      this.setState({ progress: 100 });
+  const isLoadingRef = useRef(isLoading);
+  useEffect(() => {
+    if (isLoadingRef.current && !isLoading) {
+      setProgress(100);
       setTimeout(() => {
-        this.setState({
-          displayProgress: false,
-          progress: 0,
-        });
+        setDisplayProgress(false);
+        setProgress(0);
       }, 600);
-    } else if (!prevProps.isLoading && isLoading) {
-      const { progress } = this.state;
-      this.setState({ displayProgress: true });
+    } else if (!isLoadingRef.isLoading && isLoading) {
+      setDisplayProgress(true);
       setTimeout(() => {
         if (progress < 60) {
-          this.setState({ progress: 60 });
+          setProgress(60);
         }
       }, 50);
     }
-  }
+    isLoadingRef.current = isLoading;
+  }, [isLoading, progress]);
 
-  handleBrandClicked = () => {
-    const { history } = this.props;
+  const handleBrandClicked = () => {
     history.push('/');
-  }
+  };
 
-  handleLogInClicked = () => {
-    const { history } = this.props;
+  const handleLogInClicked = () => {
     history.push('/auth/login');
-  }
+  };
 
-  handleSignUpClicked = () => {
-    const { history } = this.props;
+  const handleSignUpClicked = () => {
     history.push('/auth/signup');
-  }
+  };
 
-  handleLogOutClicked = () => {
-    const { onSignOut } = this.props;
-    onSignOut();
-  }
+  const handleLogOutClicked = () => {
+    dispatch(signOut());
+  };
 
-  handleProfileClicked = () => {
-    const { history } = this.props;
+  const handleProfileClicked = () => {
     history.push('/userprofile/myprofile');
-  }
+  };
 
-  render() {
-    const { isAuthenticated } = this.props;
-    const { progress, displayProgress } = this.state;
-    const buttonGroup = isAuthenticated ? (
-      <>
-        <Button variant="outline-secondary" size="sm" style={{ marginRight: 5 }} onClick={this.handleProfileClicked}>My Profile</Button>
-        <Button variant="secondary" size="sm" onClick={this.handleLogOutClicked}>Log Out</Button>
-      </>
-    ) : (
-      <>
-        <Button variant="outline-secondary" size="sm" style={{ marginRight: 5 }} onClick={this.handleLogInClicked}>Log In</Button>
-        <Button variant="secondary" size="sm" onClick={this.handleSignUpClicked}>Sign Up</Button>
-      </>
-    );
-    return (
-      <>
-        <Navbar bg="light" variant="light" fixed="top">
-          {displayProgress && (
+  const buttonGroup = isAuthenticated ? (
+    <>
+      <Button variant="outline-secondary" size="sm" style={{ marginRight: 5 }} onClick={handleProfileClicked}>My Profile</Button>
+      <Button variant="secondary" size="sm" onClick={handleLogOutClicked}>Log Out</Button>
+    </>
+  ) : (
+    <>
+      <Button variant="outline-secondary" size="sm" style={{ marginRight: 5 }} onClick={handleLogInClicked}>Log In</Button>
+      <Button variant="secondary" size="sm" onClick={handleSignUpClicked}>Sign Up</Button>
+    </>
+  );
+  return (
+    <>
+      <Navbar bg="light" variant="light" fixed="top">
+        {displayProgress && (
           <ProgressBar
             style={{
               position: 'absolute', zIndex: 1200, height: 3, width: '100%', top: 0, left: 0,
@@ -114,38 +104,27 @@ class NavBar extends React.PureComponent {
             srOnly
             striped
           />
-          )}
-          <NavContainer>
-            <>
-              <Navbar.Brand style={{ cursor: 'pointer' }} onClick={this.handleBrandClicked}>
+        )}
+        <NavContainer>
+          <>
+            <Navbar.Brand style={{ cursor: 'pointer' }} onClick={handleBrandClicked}>
             Stadiumer
-              </Navbar.Brand>
-              <NavBarSearch />
-              <Navbar.Toggle />
-              <Navbar.Collapse className="justify-content-end">
-                {buttonGroup}
-              </Navbar.Collapse>
-            </>
-          </NavContainer>
+            </Navbar.Brand>
+            <NavBarSearch />
+            <Navbar.Toggle />
+            <Navbar.Collapse className="justify-content-end">
+              {buttonGroup}
+            </Navbar.Collapse>
+          </>
+        </NavContainer>
 
-        </Navbar>
-      </>
-    );
-  }
-}
-
-NavBar.propTypes = {
-  isAuthenticated: PropTypes.bool.isRequired,
-  history: PropTypes.object.isRequired,
-  onSignOut: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool.isRequired,
+      </Navbar>
+    </>
+  );
 };
 
-const mapStateToProps = (state) => ({
-  isLoading: Boolean(state.ui.isLoading[STADIUM_GET]),
-});
+NavBar.propTypes = {
+  history: PropTypes.object.isRequired,
+};
 
-export default compose(
-  withRouter,
-  connect(mapStateToProps),
-)(NavBar);
+export default withRouter(NavBar);

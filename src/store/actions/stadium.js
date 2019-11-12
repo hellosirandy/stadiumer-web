@@ -1,7 +1,7 @@
 import { uiStartLoading, uiStopLoading } from './ui';
 import { STADIUM_GET } from '../loadingTypes';
 import {
-  STADIUM_SET_ALL, STADIUM_SET_SINGLE, STADIUM_SET_DETAIL,
+  STADIUM_SET_ALL, STADIUM_SET_SINGLE, STADIUM_SET_DETAIL, STADIUM_SET_TOTAL_COUNT,
 } from '../actionTypes';
 import {
   getStadiumsAPI, firstLoadStadiumAPI, getStadiumDetailAPI,
@@ -15,19 +15,25 @@ export const getStadiums = (options) => async (dispatch) => {
     type: STADIUM_SET_ALL,
     groupName,
     stadiums,
+    fullLoad: true,
   });
   dispatch(uiStopLoading(STADIUM_GET));
 };
 
 export const homePageFirstLoad = () => async (dispatch) => {
   dispatch(uiStartLoading(STADIUM_GET));
-  const groupStadiums = await firstLoadStadiumAPI();
-  Object.keys(groupStadiums).forEach((groupName) => {
+  const results = await firstLoadStadiumAPI();
+  Object.keys(results.groupStadiums).forEach((groupName) => {
     dispatch({
       type: STADIUM_SET_ALL,
       groupName,
-      stadiums: groupStadiums[groupName],
+      stadiums: results.groupStadiums[groupName],
+      fullLoad: false,
     });
+  });
+  dispatch({
+    type: STADIUM_SET_TOTAL_COUNT,
+    totalCount: results.count,
   });
   dispatch(uiStopLoading(STADIUM_GET));
 };

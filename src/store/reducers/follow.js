@@ -1,17 +1,15 @@
-import { AUTH_SET_TOKEN, LOG_OUT } from '../actionTypes';
+import { FOLLOW_SET_REVIEWS, LOG_OUT } from '../actionTypes';
 
 const initialState = {
-  token: '',
-  email: '',
-  expiration: '',
+  reviews: [],
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case AUTH_SET_TOKEN:
+    case FOLLOW_SET_REVIEWS:
       return {
         ...state,
-        token: action.token,
+        reviews: action.reviews,
       };
     case LOG_OUT:
       return initialState;
@@ -19,4 +17,5 @@ const reducer = (state = initialState, action) => {
       return state;
   }
 };
+
 export default reducer;

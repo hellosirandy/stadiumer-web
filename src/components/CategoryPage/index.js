@@ -6,7 +6,8 @@ import queryString from 'query-string';
 import { withRouter } from 'react-router-dom';
 import StadiumList from '../StadiumList';
 import { getStadiums } from '../../store/actions/stadium';
-import MainContainer from '../MainContainer';
+import SideBar from '../SideBar';
+import Map from '../Map';
 
 class CategoryPage extends React.PureComponent {
   constructor(props) {
@@ -14,7 +15,7 @@ class CategoryPage extends React.PureComponent {
     const { location, onGetStadium, groupStadiums } = props;
     const values = queryString.parse(location.search);
     const { type, value } = values;
-    if (!groupStadiums[value] || groupStadiums[value].length === 6) {
+    if (!groupStadiums[value] || !groupStadiums[value].fullLoad) {
       onGetStadium({ type, value, limit: 500 });
     }
     this.state = {
@@ -22,13 +23,36 @@ class CategoryPage extends React.PureComponent {
     };
   }
 
+  componentDidUpdate(prevProps) {
+    const { location, onGetStadium, groupStadiums } = this.props;
+    if (location.search !== prevProps.location.search) {
+      const values = queryString.parse(location.search);
+      const { type, value } = values;
+      if (!groupStadiums[value] || !groupStadiums[value].fullLoad) {
+        onGetStadium({ type, value, limit: 500 });
+      }
+      this.setState({ title: value });
+    }
+  }
+
   render() {
     const { title } = this.state;
     const { groupStadiums } = this.props;
     return (
-      <MainContainer style={{ padding: 0, paddingTop: 56 }}>
-        <StadiumList title={title} stadiums={groupStadiums[title]} />
-      </MainContainer>
+      <>
+        <SideBar />
+        <div style={{ padding: '56px 2rem 0', marginLeft: 200 }}>
+          {groupStadiums[title] && groupStadiums[title].stadiums.length > 0 && (
+            <>
+              <Map locations={groupStadiums[title].stadiums.map((s) => s.location)} style={{ width: '50%' }} />
+              <StadiumList title={title} stadiums={groupStadiums[title].stadiums} />
+            </>
+
+          )}
+        </div>
+
+
+      </>
     );
   }
 }

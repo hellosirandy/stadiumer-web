@@ -6,12 +6,13 @@ import { FIREBASE_CONFIG } from '../secrets';
 firebase.initializeApp(FIREBASE_CONFIG);
 const storage = firebase.storage();
 
-const baseURL = 'http://localhost:3001';
+const baseURL = process.env.REACT_APP_ENDPOINT;
 const api = new API(baseURL);
 
-export const getUserAPI = (id) => {
+export const getUserAPI = (id, token) => {
   const options = {
     endpoint: `/user/profile/${id}`,
+    token,
   };
   return api.get(options);
 };
@@ -24,32 +25,24 @@ export const getCurrentUserAPI = (token) => {
   return api.get(options);
 };
 
-export const getUserReviewAPI = (id) => {
-  const options = {
-    endpoint: `/review/user/${id}`,
-  };
-  return api.get(options);
-};
-
-export const updateUserAPI = (id, updates) => {
+export const updateUserAPI = async (token, id, updates) => {
   if (updates.profilePic) {
     const ref = storage.ref().child(`images/profile/${id}/${Date.now()}.jpg`);
-    return ref.putString(updates.profilePic, 'data_url').then(() => ref.getDownloadURL()).then((url) => {
-      const options = {
-        endpoint: `/user/${id}`,
-        body: {
-          ...updates,
-          profilePic: url,
-        },
-      };
-      return api.put(options);
-    }).catch((err) => {
-      console.log(err);
-    });
+    await ref.putString(updates.profilePic, 'data_url');
+    const options = {
+      endpoint: '/user',
+      body: {
+        ...updates,
+        profilePic: ref.name,
+      },
+      token,
+    };
+    return api.put(options);
   }
   const options = {
-    endpoint: `/user/${id}`,
+    endpoint: '/user',
     body: updates,
+    token,
   };
   return api.put(options);
 };

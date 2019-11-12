@@ -9,6 +9,7 @@ import auth from './reducers/auth';
 import review from './reducers/review';
 import user from './reducers/user';
 import search from './reducers/search';
+import follow from './reducers/follow';
 
 const rootReducer = combineReducers({
   ui,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   review,
   user,
   search,
+  follow,
 });
 
 let composeEnhancers = compose;

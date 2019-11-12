@@ -1,46 +1,49 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
-import { connect } from 'react-redux';
-import StadiumList from '../StadiumList';
+import { useSelector } from 'react-redux';
+import { useMediaQuery } from 'react-responsive';
+import CardColumns from 'react-bootstrap/CardColumns';
 import SideBar from '../SideBar';
+import ReviewCard from '../ReviewCard';
+import WelcomeJumbo from '../WelcomeJumbo';
 
-class HomePage extends React.PureComponent {
-  render() {
-    const { groupStadiums } = this.props;
-    const groupNames = Object.keys(groupStadiums);
-    groupNames.sort((x, y) => {
-      if (x === 'Recommended') {
-        return -1;
-      }
-      if (y === 'Recommended') {
-        return 1;
-      }
-      return 0;
-    });
-    return (
-      <>
-        <SideBar />
-        <div style={{ padding: '0 2rem', marginLeft: 200, paddingTop: 56 }}>
-          {groupNames.map((groupName) => (
-            <StadiumList key={groupName} title={groupName} stadiums={groupStadiums[groupName].slice(0, (groupName === 'Recommended' ? 12 : 6))} />
-          ))}
-        </div>
-      </>
-    );
+const ResponsiveCardColumns = ({ children }) => {
+  const isBigScreen = useMediaQuery({ query: '(min-width: 1250px)' });
+  const isLargeScreen = useMediaQuery({ query: '(min-width: 1400px)' });
+  let columnCount = 3;
+  if (isLargeScreen) {
+    columnCount = 5;
+  } else if (isBigScreen) {
+    columnCount = 4;
   }
-}
-
-HomePage.propTypes = {
-  groupStadiums: PropTypes.object.isRequired,
+  return (
+    <CardColumns style={{ marginTop: 10, columnCount }}>
+      {children}
+    </CardColumns>
+  );
 };
 
-const mapStateToProps = (state) => ({
-  groupStadiums: state.stadium.stadiums,
-});
+ResponsiveCardColumns.propTypes = {
+  children: PropTypes.any.isRequired,
+};
 
-export default compose(
-  withRouter,
-  connect(mapStateToProps),
-)(HomePage);
+const HomePage = () => {
+  const isAuthenticated = useSelector((state) => Boolean(state.auth.token));
+  const reviews = useSelector((state) => state.follow.reviews);
+  const stadiumCount = useSelector((state) => state.stadium.totalCount);
+  return (
+    <>
+      <SideBar />
+      <div style={{ padding: '56px 2rem 0', marginLeft: 200 }}>
+        {!isAuthenticated && <WelcomeJumbo count={stadiumCount} />}
+        <ResponsiveCardColumns>
+          {reviews.map((review) => (
+            <ReviewCard review={review} key={review.id} />
+          ))}
+        </ResponsiveCardColumns>
+      </div>
+    </>
+  );
+};
+
+export default HomePage;

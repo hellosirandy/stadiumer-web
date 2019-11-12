@@ -3,8 +3,8 @@ import { AUTH_SIGNIN, AUTH_RESET_PASSWORD } from '../loadingTypes';
 import {
   signInAPI, refreshTokenAPI, signUpAPI, resetPasswordAPI,
 } from '../../apis/auth';
-import { AUTH_SET_TOKEN, USER_SET_CURRET } from '../actionTypes';
-import { getCurrentUserAPI } from '../../apis/user';
+import { AUTH_SET_TOKEN, LOG_OUT } from '../actionTypes';
+import { loadCurrentUser } from './user';
 
 const setToken = (token) => ({
   type: AUTH_SET_TOKEN,
@@ -27,12 +27,8 @@ export const signUp = (options) => async (dispatch) => {
       options.firstName,
       options.lastName,
     );
-    const currentUser = await getCurrentUserAPI(token);
-    dispatch({
-      type: USER_SET_CURRET,
-      user: currentUser,
-    });
     dispatch(storeToken(token, expirationTime, refreshToken));
+    dispatch(loadCurrentUser());
   } catch (e) {
     console.log(e);
   }
@@ -43,12 +39,8 @@ export const signIn = (email, password) => async (dispatch) => {
   dispatch(uiStartLoading(AUTH_SIGNIN));
   try {
     const { token, expirationTime, refreshToken } = await signInAPI(email, password);
-    const currentUser = await getCurrentUserAPI(token);
-    dispatch({
-      type: USER_SET_CURRET,
-      user: currentUser,
-    });
     dispatch(storeToken(token, expirationTime, refreshToken));
+    dispatch(loadCurrentUser());
   } catch (e) {
     console.log(e);
   }
@@ -99,29 +91,20 @@ export const getToken = () => async (dispatch) => {
     }
     dispatch(storeToken(parsedRes.token, parsedRes.expirationTime, parsedRes.refreshToken));
 
-    const currentUser = await getCurrentUserAPI(parsedRes.token);
-    dispatch({
-      type: USER_SET_CURRET,
-      user: currentUser,
-    });
+    dispatch(loadCurrentUser());
     return parsedRes.token;
   }
   if (!token) {
     return null;
   }
-  const currentUser = await getCurrentUserAPI(token);
-  dispatch({
-    type: USER_SET_CURRET,
-    user: currentUser,
-  });
+  dispatch(loadCurrentUser());
   return token;
 };
 
 export const signOut = () => (dispatch) => {
   clearStorage();
   dispatch({
-    type: AUTH_SET_TOKEN,
-    token: '',
+    type: LOG_OUT,
   });
 };
 

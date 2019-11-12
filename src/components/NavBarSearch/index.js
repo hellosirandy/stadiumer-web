@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Form from 'react-bootstrap/Form';
-import { compose } from 'recompose';
 import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import FormControl from 'react-bootstrap/FormControl';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -14,136 +13,113 @@ import { getStadium } from '../../store/actions/stadium';
 
 let timeout = null;
 
-class NavBarSearch extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      searching: false,
-      inputValue: '',
-      searchType: 'stadium',
-    };
-  }
+const NavBarSearch = ({ history }) => {
+  const [searching, setSearching] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+  const [searchType, setSearchType] = useState('stadium');
 
-  componentDidMount() {
-    document.addEventListener('mousedown', this.handleClickOutside);
-  }
+  const searchResult = useSelector((state) => state.search.results);
+  const dispatch = useDispatch();
 
-  componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleClickOutside);
-  }
+  let wrapperRef = useRef();
 
-  setWrapperRef = (node) => {
-    this.wrapperRef = node;
-  }
-
-  handleClickOutside = (event) => {
-    if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
-      this.setState({ searching: false });
+  const handleClickOutside = (event) => {
+    if (wrapperRef && wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+      setSearching(false);
     }
-  }
+  };
 
-  handleSearchFocus = () => {
-    this.setState({ searching: true });
-  }
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
-  handleInputChange = ({ target: { value } }) => {
-    this.setState({ inputValue: value });
-    const { onSearchStadium } = this.props;
-    const { searchType } = this.state;
+  const setWrapperRef = (node) => {
+    wrapperRef = node;
+  };
+
+  const handleSearchFocus = () => {
+    setSearching(true);
+  };
+
+  const handleInputChange = ({ target: { value } }) => {
+    setInputValue(value);
     clearTimeout(timeout);
     timeout = setTimeout(() => {
       if (value) {
-        onSearchStadium(searchType, value);
+        dispatch(search(searchType, value));
       }
     }, 500);
-  }
+  };
 
-  handleResultClicked = (id) => async () => {
-    const { history, onGetStadium } = this.props;
-    const { searchType } = this.state;
+  const handleResultClicked = (id) => async (e) => {
+    e.preventDefault();
     if (searchType === 'stadium') {
-      await onGetStadium(id);
+      await dispatch(getStadium(id));
       history.push(`/stadium/${id}`);
     } else if (searchType === 'user') {
       history.push(`/userprofile/${id}`);
     }
-    this.setState({ searching: false });
-  }
+    setSearching(false);
+  };
 
-  handleDropdownSelect = (e) => {
-    this.setState({ searchType: e });
-  }
+  const handleDropdownSelect = (e) => {
+    setSearchType(e);
+  };
 
-  render() {
-    const { searching, inputValue, searchType } = this.state;
-    const { searchResult } = this.props;
-    return (
-      <Form inline>
-        <InputGroup>
-          <Dropdown onSelect={this.handleDropdownSelect}>
-            <DropdownButton
-              size="sm"
-              as={InputGroup.Prepend}
-              variant="outline-dark"
-              title={searchType}
-            >
-              <Dropdown.Item eventKey="stadium">stadium</Dropdown.Item>
-              <Dropdown.Item eventKey="user">user</Dropdown.Item>
-            </DropdownButton>
-          </Dropdown>
+  return (
+    <Form inline onSubmit={(e) => e.preventDefault}>
+      <InputGroup>
+        <Dropdown onSelect={handleDropdownSelect}>
+          <DropdownButton
+            size="sm"
+            as={InputGroup.Prepend}
+            variant="outline-dark"
+            title={searchType}
+          >
+            <Dropdown.Item eventKey="stadium">stadium</Dropdown.Item>
+            <Dropdown.Item eventKey="user">user</Dropdown.Item>
+          </DropdownButton>
+        </Dropdown>
 
-          <div ref={this.setWrapperRef}>
-            <FormControl
-              onFocus={this.handleSearchFocus}
-              onChange={this.handleInputChange}
-              type="text"
-              placeholder="Search"
-              className="mr-sm-2"
-              size="sm"
-              value={inputValue}
-              style={{ width: 250 }}
-            />
-            {searching && (
-            <ListGroup style={{
-              width: 250, position: 'absolute', top: 31, maxHeight: 350, overflowY: 'scroll',
-            }}
-            >
-              {searchResult[searchType].map((result) => (
-                <ListGroup.Item
-                  key={result.id}
-                  action
-                  style={{ padding: '6px 10px' }}
-                  onClick={this.handleResultClicked(result.id)}
-                >
-                  {result.name}
-                </ListGroup.Item>
-              ))}
-            </ListGroup>
-            )}
-          </div>
-        </InputGroup>
-      </Form>
-    );
-  }
-}
-
-NavBarSearch.propTypes = {
-  onSearchStadium: PropTypes.func.isRequired,
-  searchResult: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
-  onGetStadium: PropTypes.func.isRequired,
+        <div ref={setWrapperRef}>
+          <FormControl
+            onFocus={handleSearchFocus}
+            onChange={handleInputChange}
+            type="text"
+            placeholder="Search"
+            className="mr-sm-2"
+            size="sm"
+            value={inputValue}
+            style={{ width: 250 }}
+          />
+          {searching && (
+          <ListGroup style={{
+            width: 250, position: 'absolute', top: 31, maxHeight: 350, overflowY: 'scroll',
+          }}
+          >
+            {searchResult[searchType].map((result) => (
+              <ListGroup.Item
+                key={result.id}
+                action
+                style={{ padding: '6px 10px' }}
+                onClick={handleResultClicked(result.id)}
+              >
+                {result.name}
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+          )}
+        </div>
+      </InputGroup>
+    </Form>
+  );
 };
 
-const mapStateToProps = (state) => ({
-  searchResult: state.search.results,
-});
+NavBarSearch.propTypes = {
+  history: PropTypes.object.isRequired,
+};
 
-const mapDispatchToProps = (dispatch) => ({
-  onSearchStadium: (type, value) => dispatch(search(type, value)),
-  onGetStadium: (id) => dispatch(getStadium(id)),
-});
-
-export default compose(
-  withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
-)(NavBarSearch);
+export default withRouter(NavBarSearch);

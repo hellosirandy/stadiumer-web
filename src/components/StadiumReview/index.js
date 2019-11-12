@@ -6,54 +6,47 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import FlexHeightImage from '../FlexHeightImage';
 
-class StadiumReview extends React.PureComponent {
-  render() {
-    const { review } = this.props;
-    return (
-      <>
+const StadiumReview = ({ review }) => (
+  <>
+    <Row>
+      <Col xs={5}>
         <Row>
-          <Col xs={5}>
-            <Row>
-              <Col xs={4}>
-                <FlexHeightImage image={review.author.profilePic || '/images/boy.svg'} />
-              </Col>
-              <Col style={{ paddingLeft: 0 }}>
-                <a href={`/#/userprofile/${review.author.id}`}>
-                  {review.author.firstName}
-                  {' '}
-                  {review.author.lastName}
-                </a>
-
-
-              </Col>
-            </Row>
-
+          <Col xs={4}>
+            <FlexHeightImage image={review.author.profilePic || '/images/boy.svg'} />
           </Col>
-          <Col xs={7}>
-            <div style={{ alignItems: 'center', display: 'flex' }}>
+          <Col style={{ paddingLeft: 0 }}>
+            <a href={`/#/userprofile/${review.author.id}`}>
+              {review.author.name}
+            </a>
 
-              <Rating
-                initialRating={review.rating}
-                readonly
-                emptySymbol="fa fa-star-o fa-lg low"
-                fullSymbol="fa fa-star fa-lg low"
-                style={{ marginRight: 8 }}
-              />
-              <span style={{ color: 'gray' }}>
-                {moment(review.timestamp).format('L')}
-              </span>
-            </div>
-            <div style={{ marginTop: 6 }}>
-              {review.review}
-            </div>
 
           </Col>
         </Row>
-        <hr />
-      </>
-    );
-  }
-}
+
+      </Col>
+      <Col xs={7}>
+        <div style={{ alignItems: 'center', display: 'flex' }}>
+
+          <Rating
+            initialRating={review.rating}
+            readonly
+            emptySymbol="fa fa-star-o fa-lg low"
+            fullSymbol="fa fa-star fa-lg low"
+            style={{ marginRight: 8 }}
+          />
+          <span style={{ color: 'gray' }}>
+            {moment(review.timestamp).format('L')}
+          </span>
+        </div>
+        <div style={{ marginTop: 6 }}>
+          {review.review}
+        </div>
+
+      </Col>
+    </Row>
+    <hr />
+  </>
+);
 
 StadiumReview.propTypes = {
   review: PropTypes.object.isRequired,
