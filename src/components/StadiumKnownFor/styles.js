@@ -3,7 +3,7 @@ export default {
     fontSize: '1rem',
   },
   content: {
-    fontWeight: 600,
+    fontWeight: 500,
     fontSize: '1rem',
   },
 };

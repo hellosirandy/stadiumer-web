@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
-  GoogleMap, LoadScript, Marker,
+  GoogleMap, LoadScript, Marker, OverlayView, InfoWindow,
 } from '@react-google-maps/api';
 import { GOOGLE_MAP_API_KEY } from '../../secrets';
 
@@ -61,7 +61,7 @@ const Map = ({ locations, location, style }) => {
               lat: l.lat,
               lng: l.lng,
             }}
-          />
+           />
         ))}
         {locations.length === 0 && (
           <Marker

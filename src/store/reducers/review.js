@@ -1,4 +1,4 @@
-import { REVIEW_SET_STADIUM } from '../actionTypes';
+import { REVIEW_SET_STADIUM, REVIEW_ADD_STADIUM_REVIEW } from '../actionTypes';
 
 const initialState = {
   reviews: {},
@@ -11,7 +11,25 @@ const reducer = (state = initialState, action) => {
         ...state,
         reviews: {
           ...state.reviews,
-          [action.stadiumId]: action.reviews,
+          [action.stadiumId]: {
+            reviewIds: action.reviewIds,
+            reviewTable: action.reviewTable,
+          },
+        },
+      };
+    case REVIEW_ADD_STADIUM_REVIEW:
+      return {
+        ...state,
+        reviews: {
+          ...state.reviews,
+          [action.stadiumId]: {
+            ...state.reviews[action.stadiumId],
+            reviewIds: [action.review.id, ...state.reviews[action.stadiumId].reviewIds],
+            reviewTable: {
+              ...state.reviews[action.stadiumId].reviewTable,
+              [action.review.id]: action.review,
+            },
+          },
         },
       };
     default:

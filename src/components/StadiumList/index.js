@@ -7,9 +7,11 @@ import StadiumCard from '../StadiumCard';
 const StadiumList = ({ stadiums, title }) => (stadiums ? (
   <>
     <Row style={{ margin: 0 }}>
+      {!!title && (
       <Col xs={12} style={{ padding: 5 }}>
         <h1 style={{ margin: '0.6rem 0', fontSize: '1.2rem' }}>{title}</h1>
       </Col>
+      )}
       {stadiums.map((stadium) => (
         <Col xs={3} key={stadium.id} style={{ padding: 5 }}>
           <StadiumCard stadium={stadium} />
@@ -21,10 +23,11 @@ const StadiumList = ({ stadiums, title }) => (stadiums ? (
 
 StadiumList.defaultProps = {
   stadiums: [],
+  title: '',
 };
 
 StadiumList.propTypes = {
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   stadiums: PropTypes.array,
 };
 

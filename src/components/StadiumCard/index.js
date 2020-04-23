@@ -23,7 +23,7 @@ const StadiumCard = ({ stadium, history }) => {
         <Card.Title style={{ fontSize: '1rem' }}>{stadium.name}</Card.Title>
         <Card.Subtitle style={styles.subtitle}>{stadium.locality}</Card.Subtitle>
         <Card.Text style={styles.content}>
-          {stadium.capacity.toLocaleString()}
+          {stadium.maxCapacity.toLocaleString()}
             &nbsp;•&nbsp;
           {new Date(stadium.opened).getFullYear()}
         </Card.Text>

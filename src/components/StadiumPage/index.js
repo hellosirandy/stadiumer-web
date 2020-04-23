@@ -68,7 +68,7 @@ const StadiumPage = ({
             <h1 style={{ fontSize: '2rem', fontWeight: 600 }}>{stadium.name}</h1>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <Rating
-                initialRating={stadium.rating ? stadium.rating.rating : 0}
+                initialRating={stadium.rating ? (stadium.rating.rating / stadium.rating.count) : 0}
                 readonly
                 emptySymbol="fa fa-star-o fa-2x low"
                 fullSymbol="fa fa-star fa-2x low"
@@ -100,8 +100,8 @@ Here are how people think about
                   {' '}
                   {stadium.name}
                 </Alert>
-                {reviews && reviews.map((review) => (
-                  <StadiumReview review={review} key={review.id} />
+                {reviews && reviews.reviewIds.map((rid) => (
+                  <StadiumReview review={reviews.reviewTable[rid]} key={rid} />
                 ))}
               </>
             </StadiumIntroSection>

@@ -30,7 +30,8 @@ export const signUp = (options) => async (dispatch) => {
     dispatch(storeToken(token, expirationTime, refreshToken));
     dispatch(loadCurrentUser());
   } catch (e) {
-    console.log(e);
+    dispatch(uiStopLoading(AUTH_SIGNIN));
+    throw String(e.message);
   }
   dispatch(uiStopLoading(AUTH_SIGNIN));
 };
@@ -41,10 +42,11 @@ export const signIn = (email, password) => async (dispatch) => {
     const { token, expirationTime, refreshToken } = await signInAPI(email, password);
     dispatch(storeToken(token, expirationTime, refreshToken));
     dispatch(loadCurrentUser());
+    dispatch(uiStopLoading(AUTH_SIGNIN));
   } catch (e) {
-    console.log(e);
+    dispatch(uiStopLoading(AUTH_SIGNIN));
+    throw String(e.message);
   }
-  dispatch(uiStopLoading(AUTH_SIGNIN));
 };
 
 const validateToken = () => async (dispatch, getState) => {

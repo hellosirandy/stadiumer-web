@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import queryString from 'query-string';
 import { withRouter } from 'react-router-dom';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import StadiumList from '../StadiumList';
 import { getStadiums } from '../../store/actions/stadium';
 import SideBar from '../SideBar';
@@ -44,8 +46,26 @@ class CategoryPage extends React.PureComponent {
         <div style={{ padding: '56px 2rem 0', marginLeft: 200 }}>
           {groupStadiums[title] && groupStadiums[title].stadiums.length > 0 && (
             <>
-              <Map locations={groupStadiums[title].stadiums.map((s) => s.location)} style={{ width: '50%' }} />
-              <StadiumList title={title} stadiums={groupStadiums[title].stadiums} />
+              <Row style={{ margin: '1rem 0' }}>
+                <Col xs={6} style={{ padding: 5 }}>
+                  <h1 style={{ fontSize: '2rem' }}>
+                    {title}
+                    {' '}
+-
+                    {' '}
+                    {groupStadiums[title].stadiums.length}
+                    {' '}
+              stadiums
+                  </h1>
+                </Col>
+                <Col xs={6} style={{ padding: 5 }}>
+                  <Map locations={groupStadiums[title].stadiums.map((s) => s.location)} style={{ width: '100%' }} />
+
+                </Col>
+              </Row>
+
+
+              <StadiumList stadiums={groupStadiums[title].stadiums} />
             </>
 
           )}

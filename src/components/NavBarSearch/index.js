@@ -21,7 +21,7 @@ const NavBarSearch = ({ history }) => {
   const searchResult = useSelector((state) => state.search.results);
   const dispatch = useDispatch();
 
-  let wrapperRef = useRef();
+  const wrapperRef = useRef();
 
   const handleClickOutside = (event) => {
     if (wrapperRef && wrapperRef.current && !wrapperRef.current.contains(event.target)) {
@@ -37,7 +37,7 @@ const NavBarSearch = ({ history }) => {
   }, []);
 
   const setWrapperRef = (node) => {
-    wrapperRef = node;
+    wrapperRef.current = node;
   };
 
   const handleSearchFocus = () => {

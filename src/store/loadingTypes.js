@@ -5,6 +5,7 @@ export const AUTH_RESET_PASSWORD = 'AUTH_RESET_PASSWORD';
 
 export const REVIEW_CREATE = 'REVIEW_CREATE';
 export const REVIEW_GET = 'REVIEW_GET';
+export const REVIEW_DELETE = 'REVIEW_DELETE';
 
 export const USER_GET = 'USER_GET';
 export const USER_UPDATE = 'USER_UPDATE';

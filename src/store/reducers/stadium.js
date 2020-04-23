@@ -32,7 +32,6 @@ const reducer = (state = initialState, action) => {
         ...state,
         stadium: {
           ...state.stadium,
-          rating: action.rating,
           recommendations: action.recommendations,
         },
       };

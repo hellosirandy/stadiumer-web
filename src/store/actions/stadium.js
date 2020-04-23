@@ -57,7 +57,6 @@ export const getStadiumDetail = (id) => async (dispatch) => {
   const stadiumDetail = await getStadiumDetailAPI(id);
   dispatch({
     type: STADIUM_SET_DETAIL,
-    rating: stadiumDetail.rating,
     recommendations: stadiumDetail.recommendations,
   });
 };

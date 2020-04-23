@@ -6,10 +6,10 @@ import Image from 'react-bootstrap/Image';
 
 const ProfileFollow = ({ users }) => (
   <Row>
-    {Object.keys(users).map((uid) => (
-      <Col xs={4} key={users[uid].id} style={{ marginBottom: 10 }}>
-        <Image src={users[uid].profilePic || '/images/boy.svg'} roundedCircle width={50} height={50} style={{ marginRight: 10, objectFit: 'cover' }} />
-        <a href={`/#/userprofile/${users[uid].id}`}>{users[uid].name}</a>
+    {users.ids.map((uid) => (
+      <Col xs={4} key={uid} style={{ marginBottom: 10 }}>
+        <Image src={users.table[uid].profilePic || '/images/boy.svg'} roundedCircle width={50} height={50} style={{ marginRight: 10, objectFit: 'cover' }} />
+        <a href={`/#/userprofile/${users.table[uid].id}`}>{users.table[uid].name}</a>
       </Col>
     ))}
   </Row>

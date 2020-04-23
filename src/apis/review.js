@@ -25,3 +25,11 @@ export const getReviewsAPI = (stadiumId) => {
   };
   return api.get(options);
 };
+
+export const deleteReviewAPI = (token, rid) => {
+  const options = {
+    endpoint: `/review/${rid}`,
+    token,
+  };
+  return api.delete(options);
+};

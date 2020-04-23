@@ -11,11 +11,12 @@ import moment from 'moment';
 import FlexHeightImage from '../FlexHeightImage';
 import { GOOGLE_MAP_API_KEY } from '../../secrets';
 import { getStadium } from '../../store/actions/stadium';
+import ProfileReviewDropdown from '../ProfileReviewDropdown';
 
 const pageSize = 6;
 
 const ProfileReview = ({
-  reviews, history, onGetStadium,
+  reviews, history, onGetStadium, match,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -29,7 +30,7 @@ const ProfileReview = ({
     history.push(`/stadium/${id}`);
   };
 
-  const pageNum = ((reviews.length - 1) / pageSize) + 1;
+  const pageNum = ((reviews.reviewIds.length - 1) / pageSize) + 1;
   const pageItems = [];
   for (let i = 1; i <= pageNum; i += 1) {
     pageItems.push(
@@ -39,42 +40,60 @@ const ProfileReview = ({
     );
   }
   const start = (currentPage - 1) * pageSize;
+
   return (
     <>
-      {reviews.slice(start, start + 6).map((review) => (
-        <div key={review.id}>
-          <Row style={{ marginBottom: 8 }}>
-            <Col xs={2}>
-              <div style={{ borderRadius: 10, overflow: 'hidden', width: '90%' }}>
-                <FlexHeightImage image={`https://maps.googleapis.com/maps/api/place/photo?key=${GOOGLE_MAP_API_KEY}&photoreference=${review.stadium.cover}&maxwidth=300`} />
-              </div>
-            </Col>
-            <Col xs={4}>
-              <a onClick={handleStadiumClicked(review.stadium.id)} href={`/#/stadium/${review.stadium.id}`} style={{ fontSize: '1.2rem', fontWeight: 500 }}>
-                {review.stadium.name}
-              </a>
-              <h6 style={{ color: 'dimgray', margin: 0 }}>{review.stadium.locality}</h6>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <Rating
-                  initialRating={review.rating}
-                  readonly
-                  emptySymbol="fa fa-star-o fa-sm low"
-                  fullSymbol="fa fa-star fa-sm low"
-                  style={{ marginRight: 8 }}
-                />
+      {reviews.reviewIds.slice(start, start + 6).map((rid) => {
+        const review = reviews.reviewTable[rid];
+        return (
+          <div key={review.id}>
+            <div style={{ display: 'flex' }}>
+              <div style={{ width: 'calc(100% - 15px)' }}>
+                <Row style={{ marginBottom: 8 }}>
+                  <Col xs={2}>
+                    <div style={{ borderRadius: 10, overflow: 'hidden', width: '90%' }}>
+                      <FlexHeightImage image={`https://maps.googleapis.com/maps/api/place/photo?key=${GOOGLE_MAP_API_KEY}&photoreference=${review.stadium.cover}&maxwidth=300`} />
+                    </div>
+                  </Col>
+                  <Col xs={4}>
+                    <a onClick={handleStadiumClicked(review.stadium.id)} href={`/#/stadium/${review.stadium.id}`} style={{ fontSize: '1.2rem', fontWeight: 500 }}>
+                      {review.stadium.name}
+                    </a>
+                    <h6 style={{ color: 'dimgray', margin: 0 }}>{review.stadium.locality}</h6>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <Rating
+                        initialRating={review.rating}
+                        readonly
+                        emptySymbol="fa fa-star-o fa-sm low"
+                        fullSymbol="fa fa-star fa-sm low"
+                        style={{ marginRight: 8 }}
+                      />
 
-                <span style={{ color: 'gray', fontSize: '0.9rem' }}>
-                  {moment(review.timestamp).format('L')}
-                </span>
+                      <span style={{ color: 'gray', fontSize: '0.9rem' }}>
+                        {moment(review.timestamp).format('L')}
+                      </span>
+                    </div>
+                  </Col>
+                  <Col>
+                    <p>{review.review}</p>
+                  </Col>
+                </Row>
               </div>
-            </Col>
-            <Col>
-              <p>{review.review}</p>
-            </Col>
-          </Row>
-          <hr />
-        </div>
-      ))}
+              {match.params.userId === 'myprofile' && (
+              <div style={{
+                width: 15, zIndex: 1,
+              }}
+              >
+                <ProfileReviewDropdown reviewId={review.id} />
+              </div>
+              )}
+            </div>
+            <hr />
+
+          </div>
+
+        );
+      })}
       <Pagination style={{ justifyContent: 'center' }}>
         {pageItems}
       </Pagination>
@@ -83,9 +102,10 @@ const ProfileReview = ({
 };
 
 ProfileReview.propTypes = {
-  reviews: PropTypes.array.isRequired,
+  reviews: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   onGetStadium: PropTypes.func.isRequired,
+  match: PropTypes.object.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({

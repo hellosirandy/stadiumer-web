@@ -11,7 +11,20 @@ const StadiumKnownFor = ({ stadium }) => (
       <Col xs={2} style={styles.title}>
         <span>Capacity</span>
       </Col>
-      <Col style={styles.content}><span>{stadium.capacity}</span></Col>
+      <Col style={styles.content}>
+        {Object.keys(stadium.capacities).map((sport) => (
+          <div key={sport}>
+            <span>
+              {sport}
+:
+&nbsp;
+              {stadium.capacities[sport].toLocaleString()}
+            </span>
+            <br />
+          </div>
+        ))}
+
+      </Col>
     </Row>
     <Row>
       <Col xs={2} style={styles.title}>
@@ -21,18 +34,10 @@ const StadiumKnownFor = ({ stadium }) => (
     </Row>
     <Row>
       <Col xs={2} style={styles.title}>
-        <span>Sports</span>
-      </Col>
-      <Col style={styles.content}>
-        <span>{stadium.sports.join(', ')}</span>
-      </Col>
-    </Row>
-    <Row>
-      <Col xs={2} style={styles.title}>
         <span>Opened</span>
       </Col>
       <Col style={styles.content}>
-        <span>{moment(stadium.opened).utc().format('L')}</span>
+        <span>{moment(stadium.opened).utc().format('LL')}</span>
       </Col>
     </Row>
     <Row>
@@ -46,7 +51,8 @@ const StadiumKnownFor = ({ stadium }) => (
               {tenant}
 &nbsp;
 (
-              {stadium.tenants[tenant]}
+              <a href={`/#/category?type=league&value=${encodeURIComponent(stadium.tenants[tenant])}`}>{stadium.tenants[tenant]}</a>
+
 )
             </span>
             <br />

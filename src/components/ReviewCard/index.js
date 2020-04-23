@@ -6,8 +6,7 @@ import Rating from 'react-rating';
 import moment from 'moment';
 import Card from 'react-bootstrap/Card';
 import Image from 'react-bootstrap/Image';
-import FlexHeightImage from '../FlexHeightImage';
-import { GOOGLE_MAP_API_KEY } from '../../secrets';
+import Button from 'react-bootstrap/Button';
 import { getStadium } from '../../store/actions/stadium';
 
 const ReviewCard = ({
@@ -21,7 +20,6 @@ const ReviewCard = ({
     history.push(`/stadium/${review.stadium.id}`);
   };
 
-  const cover = `https://maps.googleapis.com/maps/api/place/photo?key=${GOOGLE_MAP_API_KEY}&photoreference=${review.stadium.cover}&maxwidth=300`;
   return (
     <Card>
       <Card.Header style={{ paddingLeft: '1rem', paddingRight: '1rem' }}>
@@ -36,7 +34,6 @@ const ReviewCard = ({
         </div>
 
       </Card.Header>
-      <FlexHeightImage image={cover} height="50%" />
       <Card.Body style={{ padding: '1rem' }}>
         <Card.Title style={{ fontWeight: 500 }} onClick={handleTitleClicked} as="a" href="/#/">{review.stadium.name}</Card.Title>
         <hr style={{ marginTop: '0.5rem', marginBottom: '0.5rem' }} />
@@ -44,8 +41,8 @@ const ReviewCard = ({
           <Rating
             initialRating={review.rating}
             readonly
-            emptySymbol="fa fa-star-o fa-lg low"
-            fullSymbol="fa fa-star fa-lg low"
+            emptySymbol="fa fa-star fa-lg"
+            fullSymbol="fa fa-star fa-lg"
             style={{ marginRight: 8 }}
           />
         </div>
@@ -53,6 +50,13 @@ const ReviewCard = ({
           {review.review}
         </Card.Text>
       </Card.Body>
+      <Card.Footer style={{ padding: '0.5rem 1rem' }}>
+        <Button variant="link" size="sm" style={{ color: '#5c5c5c' }}>
+          <i className="fa fa-thumbs-up fa-sm" />
+          {' '}
+123
+        </Button>
+      </Card.Footer>
     </Card>
   );
 };

@@ -5,9 +5,11 @@ import { withRouter } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
 import Col from 'react-bootstrap/Col';
 import styles from './styles';
 import { signIn, signUp } from '../../store/actions/auth';
+import { validate, validateForm } from '../../utils/validation';
 
 const AuthPage = ({
   match,
@@ -15,21 +17,36 @@ const AuthPage = ({
   const [controls, setControls] = useState({
     email: {
       value: '',
+      valid: true,
+      validationRules: ['isEmail'],
+      errorMsg: 'Please fill email correctly.',
     },
     password: {
       value: '',
+      valid: true,
+      validationRules: ['notEmpty'],
+      errorMsg: 'Password cannot be empty.',
     },
     confirmPassword: {
       value: '',
+      valid: true,
+      validationRules: ['equalsTo'],
+      errorMsg: 'Confirm password and password should be identical',
     },
     firstName: {
       value: '',
+      valid: true,
+      validationRules: ['notEmpty'],
+      errorMsg: 'First name cannot be empty.',
     },
     lastName: {
       value: '',
+      valid: true,
+      validationRules: ['notEmpty'],
+      errorMsg: 'Last name cannot be empty.',
     },
   });
-  // const [errorMsg, setErrorMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
 
   const dispatch = useDispatch();
 
@@ -41,6 +58,7 @@ const AuthPage = ({
         value,
       },
     });
+    // setTouched(true);
   };
 
   const handleFormSubmitted = async (e) => {
@@ -52,16 +70,39 @@ const AuthPage = ({
       lastName: { value: lastName },
     } = controls;
     const isSignUp = match.params.action === 'signup';
+    const keys = isSignUp
+      ? ['email', 'password', 'confirmPassword', 'firstName', 'lastName']
+      : ['email', 'password', 'confirmPassword'];
     try {
-      if (isSignUp) {
-        await dispatch(signUp({
-          email, password, firstName, lastName,
-        }));
-      } else {
-        await dispatch(signIn(email, password));
+      validateForm(controls, keys);
+      try {
+        if (isSignUp) {
+          await dispatch(signUp({
+            email, password, firstName, lastName,
+          }));
+        } else {
+          await dispatch(signIn(email, password));
+        }
+      } catch (err) {
+        setErrorMsg(err);
       }
     } catch (err) {
-      // setErrorMsg(err);
+      setErrorMsg(err);
+    }
+  };
+
+  const handleInputBlurred = (key) => () => {
+    const valid = key === 'confirmPassword'
+      ? validate(controls[key].value, controls[key].validationRules, controls.password.value)
+      : validate(controls[key].value, controls[key].validationRules);
+    if (valid !== controls[key].valid) {
+      setControls({
+        ...controls,
+        [key]: {
+          ...controls[key],
+          valid,
+        },
+      });
     }
   };
 
@@ -69,7 +110,13 @@ const AuthPage = ({
   const confirmPasswordInput = isSignUp ? (
     <Form.Group>
       <Form.Label>Confirm Password</Form.Label>
-      <Form.Control type="password" placeholder="Confirm Password" onChange={handleInputChange('confirmPassword')} />
+      <Form.Control
+        isInvalid={!controls.confirmPassword.valid}
+        onBlur={handleInputBlurred('confirmPassword')}
+        type="password"
+        placeholder="Confirm Password"
+        onChange={handleInputChange('confirmPassword')}
+      />
     </Form.Group>
   ) : null;
   const nameInput = isSignUp ? (
@@ -77,10 +124,20 @@ const AuthPage = ({
       <Form.Label>Name</Form.Label>
       <Form.Row>
         <Col>
-          <Form.Control placeholder="First name" onChange={handleInputChange('firstName')} />
+          <Form.Control
+            isInvalid={!controls.firstName.valid}
+            onBlur={handleInputBlurred('firstName')}
+            placeholder="First name"
+            onChange={handleInputChange('firstName')}
+          />
         </Col>
         <Col>
-          <Form.Control placeholder="Last name" onChange={handleInputChange('lastName')} />
+          <Form.Control
+            isInvalid={!controls.lastName.valid}
+            onBlur={handleInputBlurred('lastName')}
+            placeholder="Last name"
+            onChange={handleInputChange('lastName')}
+          />
         </Col>
       </Form.Row>
     </Form.Group>
@@ -101,14 +158,31 @@ const AuthPage = ({
     <Container style={styles.container}>
       <Form style={{ width: 500 }} onSubmit={handleFormSubmitted}>
         <Form.Text as="h1" style={styles.title}>{title}</Form.Text>
+        {!!errorMsg && (
+        <Alert variant="danger">
+          {errorMsg}
+        </Alert>
+        )}
         {nameInput}
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
-          <Form.Control type="email" placeholder="Enter email" onChange={handleInputChange('email')} />
+          <Form.Control
+            isInvalid={!controls.email.valid}
+            onBlur={handleInputBlurred('email')}
+            type="email"
+            placeholder="Enter email"
+            onChange={handleInputChange('email')}
+          />
         </Form.Group>
         <Form.Group>
           <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Password" onChange={handleInputChange('password')} />
+          <Form.Control
+            isInvalid={!controls.password.valid}
+            onBlur={handleInputBlurred('password')}
+            type="password"
+            placeholder="Password"
+            onChange={handleInputChange('password')}
+          />
         </Form.Group>
         {confirmPasswordInput}
         <div style={{ justifyContent: 'flex-end', display: 'flex' }}>

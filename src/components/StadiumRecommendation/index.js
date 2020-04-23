@@ -18,7 +18,7 @@ const StadiumRecommendation = ({ stadium, onClick }) => (
       </h2>
       <h2 style={styles.subtitle}>{stadium.locality}</h2>
       <h2 style={styles.subtitle}>
-        {stadium.capacity}
+        {stadium.maxCapacity.toLocaleString()}
         &nbsp;•&nbsp;
         {new Date(stadium.opened).getFullYear()}
       </h2>

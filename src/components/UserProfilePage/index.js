@@ -8,7 +8,7 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
 import FlexHeightImage from '../FlexHeightImage';
-import { getUser } from '../../store/actions/user';
+import { getUser, clearUser } from '../../store/actions/user';
 import UserProfileSection from '../UserProfileSection';
 import ProfileReview from '../ProfileReview';
 import ProfileFollow from '../ProfileFollow';
@@ -20,14 +20,20 @@ const UserProfilePage = ({
   const user = useSelector((state) => (match.params.userId === 'myprofile' ? state.user.currentUser : state.user.user));
   const dispatch = useDispatch();
 
-  const matchRef = useRef(match);
+  const userIdRef = useRef(match.params.userId);
+  if (!user.id && match.params.userId !== 'myprofile') {
+    dispatch(getUser(match.params.userId));
+  }
   useEffect(() => {
-    if ((!user.id || matchRef.current.params.userId !== match.params.userId) && match.params.userId !== 'myprofile') {
+    window.scrollTo(0, 0);
+    if ((userIdRef.current !== match.params.userId) && match.params.userId !== 'myprofile') {
       dispatch(getUser(match.params.userId));
-      window.scrollTo(0, 0);
     }
-    matchRef.current = match;
-  }, [user, dispatch, match]);
+    userIdRef.current = match.params.userId;
+    return () => {
+      dispatch(clearUser());
+    };
+  }, [dispatch, match.params.userId]);
 
   const handleUpdateProfileClicked = () => {
     history.push('/updateprofile');
@@ -72,7 +78,7 @@ const UserProfilePage = ({
                 {user.profile.lastName}
               </h1>
               <h6 style={{ fontWeight: 400 }}>
-                {`${user.reviews.length} Reviews | ${Object.keys(user.follow.following).length} Following | ${Object.keys(user.follow.followers).length} Followers`}
+                {`${user.reviews.reviewIds.length} Reviews | ${Object.keys(user.follow.following).length} Following | ${Object.keys(user.follow.followers).length} Followers`}
               </h6>
             </Col>
             <Col style={{ display: 'flex', alignItems: 'center' }}>
